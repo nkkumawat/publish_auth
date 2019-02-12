@@ -1,0 +1,23 @@
+{
+  "name": "publish_auth",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nkkumawat/publish_auth.git"
+  },
+  "author": "Narendra Kumawat",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nkkumawat/publish_auth/issues"
+  },
+  "homepage": "https://github.com/nkkumawat/publish_auth#readme",
+  "dependencies": {
+    "ganache-cli": "^6.3.0",
+    "truffle": "^5.0.3"
+  }
+}
