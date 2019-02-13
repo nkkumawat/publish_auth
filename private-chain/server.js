@@ -21,7 +21,9 @@ app.post('/addInt', (req, res) => {
   console.log(req.body);
   let _a = req.body._a;
   let _b = req.body._b;
-  truffle_connect.addTwoInt(_a , _b, (_c) => {
+  let _account_token = req.body._account_token;
+  
+  truffle_connect.addTwoInt(_a , _b,_account_token, (_c) => {
       response = [_c]
       return res.send(response);
   });

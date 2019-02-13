@@ -21,19 +21,22 @@ module.exports = {
       callback(self.accounts);
     });
   },
-  addTwoInt: function(_a , _b, callback) {
+  addTwoInt: function(_a , _b, _account_token , callback) {
     var self = this;
     AddInt.setProvider(self.web3.currentProvider);
     var answer;
-    // callback(_a)
-    AddInt.deployed().then(function(instance) {
-      answer = instance;
-      return answer.addition.call(_a , _b);
-    }).then(function(value) {
-        callback(value.valueOf());
-    }).catch(function(e) {
-        console.log(e);
-        callback("Error 404");
-    });
+    // AddInt.deployed().then(f => {
+
+    // }).catch(err => {
+
+    // })
+    // AddInt.deployed().then(function(instance) {
+    //   return instance.addTwoNumbers.call(_a , _b , {from : _account_token});
+    // }).then(function(value) {
+    //     callback(value.valueOf());
+    // }).catch(function(e) {
+    //     console.log(e);
+    //     callback("Error 404");
+    // });
   }
 }
