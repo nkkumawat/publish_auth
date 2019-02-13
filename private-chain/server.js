@@ -34,4 +34,4 @@ app.listen(port, () => {
     truffle_connect.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
     console.log("Express Listening at http://localhost:" + port);
   
-  });
+});

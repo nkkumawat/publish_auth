@@ -1,11 +1,11 @@
 const contract = require('truffle-contract');
 const add_int_artifact = require('../build/contracts/AddInteger.json');
-var AddInt = contract(add_int_artifact);
+var AddIntContract = contract(add_int_artifact);
 
 module.exports = {
   start: function(callback) {
     var self = this;
-    AddInt.setProvider(self.web3.currentProvider);
+    AddIntContract.setProvider(self.web3.currentProvider);
     self.web3.eth.getAccounts(function(err, accs) {
       // console.log(accs)
       if (err) {
@@ -23,20 +23,16 @@ module.exports = {
   },
   addTwoInt: function(_a , _b, _account_token , callback) {
     var self = this;
-    AddInt.setProvider(self.web3.currentProvider);
+    AddIntContract.setProvider(self.web3.currentProvider);
     var answer;
-    // AddInt.deployed().then(f => {
-
-    // }).catch(err => {
-
-    // })
-    // AddInt.deployed().then(function(instance) {
-    //   return instance.addTwoNumbers.call(_a , _b , {from : _account_token});
-    // }).then(function(value) {
-    //     callback(value.valueOf());
-    // }).catch(function(e) {
-    //     console.log(e);
-    //     callback("Error 404");
-    // });
+  
+    AddIntContract.deployed().then(function(instance) {
+      return instance.addTwoNumbers.call(_a , _b , {from : _account_token});
+    }).then(function(value) {
+        callback(value.valueOf());
+    }).catch(function(e) {
+        console.log(e);
+        callback("Error 404" + e);
+    });
   }
 }

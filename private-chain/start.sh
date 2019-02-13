@@ -1,1 +1,0 @@
-truffle compile & truffle migrate & npm start
