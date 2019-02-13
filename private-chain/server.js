@@ -4,6 +4,13 @@ const port = 3000 || process.env.PORT;
 const Web3 = require('web3');
 const truffle_connect = require('./connection/app.js');
 const bodyParser = require('body-parser');
+const web3_ac = require('web3-eth-accounts');
+
+
+var env = process.env.NODE_ENV || 'development';
+var config = require('./config/config')[env];
+var mongoose = require('mongoose');
+// mongoose.connect(config.db);
 
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -15,6 +22,11 @@ app.get('/getAccounts', (req, res) => {
   truffle_connect.start(function (answer) {
     res.send(answer);
   })
+});
+app.get('/createAccount', (req, res) => {
+  let ac = truffle_connect.web3.personal.newAccount();
+  // truffle_connect.web3.personal.register(ac);
+  res.send(truffle_connect.web3);
 });
 
 app.post('/addInt', (req, res) => {
@@ -33,5 +45,4 @@ app.post('/addInt', (req, res) => {
 app.listen(port, () => {
     truffle_connect.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
     console.log("Express Listening at http://localhost:" + port);
-  
 });
