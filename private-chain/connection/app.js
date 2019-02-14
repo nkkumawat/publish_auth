@@ -24,10 +24,20 @@ module.exports = {
   addTwoInt: function(_a , _b, _account_token , callback) {
     var self = this;
     AddIntContract.setProvider(self.web3.currentProvider);
-    var answer;
-  
     AddIntContract.deployed().then(function(instance) {
       return instance.addTwoNumbers.call(_a , _b , {from : _account_token});
+    }).then(function(value) {
+        callback(value.valueOf());
+    }).catch(function(e) {
+        console.log(e);
+        callback("Error 404" + e);
+    });
+  },
+  getMyData: function(_account_token , callback) {
+    var self = this;
+    AddIntContract.setProvider(self.web3.currentProvider);
+    AddIntContract.deployed().then(function(instance) {
+      return instance.getNumber.call({from : _account_token});
     }).then(function(value) {
         callback(value.valueOf());
     }).catch(function(e) {
