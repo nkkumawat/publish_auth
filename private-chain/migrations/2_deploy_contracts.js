@@ -1,5 +1,4 @@
-var Addition   = artifacts.require("./AddInteger.sol");
-
+var OnlineBooksAuthenticity = artifacts.require("./OnlineBooksAuthenticity.sol");
 module.exports = function(deployer) {
-  deployer.deploy(Addition);
+  deployer.deploy(OnlineBooksAuthenticity);
 };

@@ -1,19 +1,19 @@
 const contract = require('truffle-contract');
-const add_int_artifact = require('../build/contracts/AddInteger.json');
-var AddIntContract = contract(add_int_artifact);
+
+const metacoin_artifact = require('../build/contracts/OnlineBooksAuthenticity.json');
+var MetaCoin = contract(metacoin_artifact);
 
 module.exports = {
-  start: function(callback) {
+  getAccounts: function(callback) {
     var self = this;
-    AddIntContract.setProvider(self.web3.currentProvider);
+    MetaCoin.setProvider(self.web3.currentProvider);
     self.web3.eth.getAccounts(function(err, accs) {
-      // console.log(accs)
-      if (err) {
-        console.log(err);
+      if (err != null) {
+       console.log("error");
         return;
       }
       if (accs.length == 0) {
-        console.log("0 account created");
+        console.log("No Accounts");
         return;
       }
       self.accounts = accs;
@@ -21,28 +21,54 @@ module.exports = {
       callback(self.accounts);
     });
   },
-  addTwoInt: function(_a , _b, _account_token , callback) {
+  // refreshBalance: function(account, callback) {
+  //   var self = this;
+
+  //   // Bootstrap the MetaCoin abstraction for Use.
+  //   MetaCoin.setProvider(self.web3.currentProvider);
+
+  //   var meta;
+  //   MetaCoin.deployed().then(function(instance) {
+  //     meta = instance;
+  //     return meta.getBalance.call(account, {from: account});
+  //   }).then(function(value) {
+  //       callback(value.valueOf());
+  //   }).catch(function(e) {
+  //       console.log(e);
+  //       callback("Error 404");
+  //   });
+  // },
+  // sendCoin: function(amount, sender, receiver, callback) {
+  //   var self = this;
+
+  //   // Bootstrap the MetaCoin abstraction for Use.
+  //   MetaCoin.setProvider(self.web3.currentProvider);
+
+  //   var meta;
+  //   MetaCoin.deployed().then(function(instance) {
+  //     meta = instance;
+  //     return meta.sendCoin(receiver, amount, {from: sender});
+  //   }).then(function() {
+  //     self.refreshBalance(sender, function (answer) {
+  //       callback(answer);
+  //     });
+  //   }).catch(function(e) {
+  //     console.log(e);
+  //     callback("ERROR 404");
+  //   });
+  // },
+    createContract: function( callback) {
     var self = this;
-    AddIntContract.setProvider(self.web3.currentProvider);
-    AddIntContract.deployed().then(function(instance) {
-      return instance.addTwoNumbers.call(_a , _b , {from : _account_token});
-    }).then(function(value) {
-        callback(value.valueOf());
+    MetaCoin.setProvider(self.web3.currentProvider);
+    var meta;
+    MetaCoin.deployed().then(function(instance) {
+      meta = instance;
+      return meta.createContract( {from: '0x32B320475245069F7D629785882F5F704cE22196'});
+    }).then(function(answer) {
+        callback(answer);
     }).catch(function(e) {
-        console.log(e);
-        callback("Error 404" + e);
-    });
-  },
-  getMyData: function(_account_token , callback) {
-    var self = this;
-    AddIntContract.setProvider(self.web3.currentProvider);
-    AddIntContract.deployed().then(function(instance) {
-      return instance.getNumber.call({from : _account_token});
-    }).then(function(value) {
-        callback(value.valueOf());
-    }).catch(function(e) {
-        console.log(e);
-        callback("Error 404" + e);
+      console.log(e);
+      callback("ERROR 404");
     });
   }
 }

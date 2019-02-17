@@ -1,0 +1,8 @@
+{
+    "development": {
+        "superSecret": "GkmRZkU72yDH7aaREuBrGkmRZkU72yDH7aaREuBrGkmRZkU72yDH7aaREuBrGkmRZkU72yDH7aaREuBr"
+    },
+    "production": {
+        "superSecret": "GkmRZkU72yDH7aaREuBrGkmRZkU72yDH7aaREuBrGkmRZkU72yDH7aaREuBrGkmRZkU72yDH7aaREuBr"   
+    }
+}
