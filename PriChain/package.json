@@ -1,0 +1,37 @@
+{
+  "name": "publish_auth",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bin/www",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "Narendra Kumawat",
+  "license": "MIT",
+  "bugs": {
+    "url": ""
+  },
+  "homepage": "",
+  "dependencies": {
+    "bcrypt": "^2.0.1",
+    "body-parser": "^1.18.2",
+    "cookie-parser": "^1.4.3",
+    "ejs": "^2.6.1",
+    "ethereumjs-tx": "^1.3.7",
+    "express": "^4.16.3",
+    "fs": "0.0.1-security",
+    "ipfs-api": "^26.1.2",
+    "jsonwebtoken": "^8.2.1",
+    "mysql2": "^1.5.3",
+    "nodemailer": "^4.6.4",
+    "request": "^2.85.0",
+    "sequelize": "^4.37.7",
+    "web3": "^1.0.0-beta.48",
+    "web3-eth-accounts": "^1.0.0-beta.48"
+  }
+}
