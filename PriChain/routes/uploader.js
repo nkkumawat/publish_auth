@@ -14,8 +14,6 @@ var publishStorage = multer.diskStorage({
 var uploadPublish = multer({storage: publishStorage});
 
 router.post('/upload', uploadPublish.single('publication-file'),  (req, res) => {
-    // var filename = req.files.filename ;
-    // console.log(req.file)
     res.json({
         success : true,
         filepath: req.file.path

@@ -14,8 +14,8 @@ router.get('/', (req, res, next) => {
     res.render('signin' , {});
 });
 
-router.get('/login', (req, res, next) => {
-    res.render('login', {});
+router.get('/signin', (req, res, next) => {
+    res.render('signin', {});
 });
 
 router.get('/signup', (req, res, next) => {

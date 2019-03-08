@@ -125,97 +125,38 @@ router.post('/publish/getall' , function(req, res, next) {
 });
 
 
-router.get('/publish/blockchain/get', function(req, res, next) {
-    const bContract = new web3js.eth.Contract(bookContract.abi, '0x013876912a210a9748f484f289Fb696D53112c8B');
-    bContract.methods.getBookDetails().call( {from: '0x32B320475245069F7D629785882F5F704cE22196'} , (err , result)=>{
-        console.log(err , result);
-        if(err) {
+router.post('/publish/blockchain/get', function(req, res, next) {
+    var params = req.body;
+    console.log(params.contract_address);
+    const bContract = new web3js.eth.Contract(bookContract.abi, params.contract_address);
+    utilityService.decodeToken(params.user_token).then(userdecoded =>{
+        userService.getUser(userdecoded).then(user =>{
+            bContract.methods.getBookDetails().call( {from: /*user.blockchain_address */ '0x2DaB9028c7436B428b95033bbe46A540127d626F'} , (err , result)=>{
+                console.log(err , result);
+                if(err) {
+                    res.json({
+                        success: false,
+                        result :  err
+                    })
+                } else {
+                    res.json({
+                        success: true,
+                        result :  result
+                    })
+                }
+            })
+        }).catch(err => {
             res.json({
                 success: false,
                 result :  err
             })
-        } else {
-            res.json({
-                success: true,
-                result :  result
-            })
-        }
-        
+        })
+    }).catch(err => {
+        res.json({
+            success: false,
+            result :  err
+        })
     })
-    console.log("hello")
-
-
-
-    // bContract.methods.getBookDetails().call({from: '0x32B320475245069F7D629785882F5F704cE22196'})
-    // .then((result) => {
-    //     console.log("dgxdddddddg")
-    // });
-
-    // bContract.methods.getBookDetails().call( {from: '0x32B320475245069F7D629785882F5F704cE22196'}).then(result => {
-    //     res.json({
-    //         success: true,
-    //         result :  result
-    //     })
-    // }).catch(err => {
-    //     console.log(err)
-    //     res.json({
-    //         success: false,
-    //         result :  err
-    //     })
-    // })
 })
-
-// router.get('/create', function(req, res, next) {
-//     // var bookContract = new web3js.eth.Contract(onlineAuth.abi );
-//     // // console.log(bookContract.options)
-//     // var contract =  bookContract.deploy()
-//     // web3js.eth.getAccounts().then(acs => {
-//     //     res.json({
-//     //         acs : acs
-//     //     })
-//     // });
-//     // // console.log(ac)
-
-
-//     web3js.eth.defaultAccount = "0x83f0cc82da8d93ac9d300f1cc6651c7a670340d0";
-//     web3js.eth.defaultGas = 0;
-    
-//     web3js.eth.getTransactionCount("0x83f0cc82da8d93ac9d300f1cc6651c7a670340d0").then((txCount) => {
-//         const data = onlineAuth.bytecode   ;
-//         web3js.eth.estimateGas({data: data}).then(gasEstimate => {
-//             console.log(gasEstimate)
-//             const txObject = {
-//                 nonce:    web3js.utils.toHex(txCount),
-//                 gasLimit: web3js.utils.toHex(1858379), 
-//                 gasPrice: gasEstimate,
-//                 data: data
-//             }
-//             const tx = new Tx(txObject)
-//             const privateKey = Buffer.from('5ccc182b6a3eaaf029e529a80d9761a49442989f00aa9f7400c49c79e14add81', 'hex');
-//             tx.sign(privateKey)
-//             const serializedTx = tx.serialize()
-//             const raw = '0x' + serializedTx.toString('hex')
-        
-//             web3js.eth.sendSignedTransaction(raw).then( (txHash) => {
-//                 res.json({
-//                     success: true,
-//                     result:  txHash
-//                 })
-//             }).catch(err => {
-//                 console.log(err)
-//                 res.json({
-//                     success: false,
-//                     result: err 
-//                 })
-//             })
-//         });           
-//     }).catch(err => {
-//         console.log(err)
-//         res.json({
-//             success: false,
-//             result: err 
-//         })
-//     })
-// });
 
 module.exports = router;
