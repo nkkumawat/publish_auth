@@ -27,6 +27,7 @@
     "fs": "0.0.1-security",
     "ipfs-api": "^26.1.2",
     "jsonwebtoken": "^8.2.1",
+    "multer": "^1.4.1",
     "mysql2": "^1.5.3",
     "nodemailer": "^4.6.4",
     "request": "^2.85.0",

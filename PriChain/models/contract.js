@@ -15,6 +15,10 @@ module.exports = function(sequelize, DataTypes) {
 		user_address: {
 			type: DataTypes.STRING,
 			allowNull: true
+		},
+		contract_type: {
+			type: DataTypes.STRING,
+			allowNull: true
 		}
 	}, {
 		timestamp: true

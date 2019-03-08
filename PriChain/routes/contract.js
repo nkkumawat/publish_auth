@@ -3,6 +3,7 @@ const router = express.Router();
 
 const utilityService = require('../services/utilityService');
 const userService = require('../services/userService');
+const contractService = require('../services/contractService');
 
 const env = process.env.NODE_ENV || 'development';
 const config = require('../config/config.json')[env];
@@ -21,8 +22,7 @@ router.get('/', function(req, res, next) {
 });
 
 
-router.post('/create' , function(req,  res, next) {
-    console.log("nk")
+router.post('/publish/create' , function(req,  res, next) {
     const contract1 = new web3js.eth.Contract(onlineAuth.abi, null, { data:  onlineAuth.bytecode});
     var params = req.body;
     utilityService.decodeToken(params.user_token).then(userdecoded =>{
@@ -41,39 +41,53 @@ router.post('/create' , function(req,  res, next) {
                         gas: gas
                     }).then((instance) => { 
                         console.log("Contract mined at " + instance.options.address);
-                        res.json({
-                            success: true,
-                            result : instance.options
+                        var params = {
+                            user_address : user.blockchain_address,
+                            contract_address: instance.options.address,
+                            contract_type: "publish"
+                        }
+                        contractService.saveContract(params).then(contract => {
+                            res.json({
+                                success: true,
+                                result : params
+                            })
+                        }).catch(err => {
+                            console.log(err);
+                            res.json({
+                                success: false,
+                                result : err
+                            })
                         })
                     }).catch(err => {
-                        console.log(err)
+                        console.log(err);
                         res.json({
                             success: false,
                             result :  err
                         })
                     });
                 }).catch(err => {
-                    console.log(err)
+                    console.log(err);
                     res.json({
                         success: false,
                         result :  err
                     })
                 });
             }).catch(err => {
-                console.log(err)
+                console.log(err);
                 res.json({
                     success: false,
                     result :  err
                 })
             })
         }).catch(err => {
+            console.log(err);
             res.json({
                 success: false,
                 result :  err
             })
         })
-
     }).catch(err => {
+        console.log(err);
         res.json({
             success: false,
             result :  err
