@@ -4,8 +4,28 @@
         <% include ./partials/head %>
     </head>
 <body>
-    <div class="container-fluid center loader"><br><br><br>
-      <div class="preloader-wrapper big active loader">
+  <ul id="slide-out" class=" sidenav sidenav-fixed">
+    <li><div class="user-view">
+      <div class="background">
+        <img src="images/wall.jpg">
+      </div>
+      <a href="#user"><img class="circle" src="images/avatar_m.jpeg"></a>
+      <a href="#name"><span class="white-text name">John Doe</span></a>
+      <a href="#email"><span class="white-text email">demoemail@gmail.com</span></a>
+    </div></li>
+    <li><a  id="create-contract-link"><i class="material-icons">add_circle_outline</i>Create New Contract</a></li>
+    <li><a id="all-contract-link"> <i class="material-icons">chrome_reader_mode</i>All Contract</a></li>
+    <li><div class="divider"></div></li>
+    <li><a class=""><i class="material-icons">exit_to_app</i>Distributer`s Requests</a></li>
+    <li><div class="divider"></div></li>
+    <li><a class=""><i class="material-icons">account_circle</i>Profile</a></li>
+    <li><a class="" href="/logout"><i class="material-icons">close</i>Logout</a></li>
+  </ul>
+  <div class="container">
+     <!-- ===============Loader==================== -->
+    <div class="row">
+      <div class="col s12 m12">
+        <div class="preloader-wrapper big active loader">
           <div class="spinner-layer spinner-blue-only">
             <div class="circle-clipper left">
               <div class="circle"></div>
@@ -16,80 +36,23 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="progress hide" style="z-index: 2; position: fixed;">
+          <div class="indeterminate"></div>
+      </div>
+    </div>
+      <!-- =====================MainPage================ -->
+
+    <div class="row">
+      <div class="col s2 m2"></div>
+      <div class="col s10 m10">
+          <div class="row load-data-tab "></div>
+      </div>
     </div>
 
-  <div class="container-fluid hide main-page">
 
-  <div class="progress hide" style="z-index: 2; position: fixed;">
-      <div class="indeterminate"></div>
   </div>
-        
  
-  <a href="#" data-target="slide-out" class="sidenav-trigger ndigo darken-1 right  ">
-      <i class="material-icons medium">menu</i>
-      <!-- menus -->
-    </a>
-  <ul id="slide-out" class="sidenav">
-    <li><div class="user-view">
-      <div class="background">
-        <img src="images/wall.jpg">
-      </div>
-      <a href="#user"><img class="circle" src="images/avatar_m.jpeg"></a>
-      <a href="#name"><span class="white-text name">John Doe</span></a>
-      <a href="#email"><span class="white-text email">demoemail@gmail.com</span></a>
-    </div></li>
-    <li><a  id="create-contract-link"><i class="material-icons">add_circle_outline</i>Create New Contract</a></li>
-    <li><a href="#!"> <i class="material-icons">chrome_reader_mode</i>All Contract</a></li>
-    <li><div class="divider"></div></li>
-    <li><a class=""><i class="material-icons">exit_to_app</i>Distributer`s Requests</a></li>
-    <li><div class="divider"></div></li>
-    <li><a class=""><i class="material-icons">account_circle</i>Profile</a></li>
-    <li><a class="" href="/logout"><i class="material-icons">close</i>Logout</a></li>
-  </ul>
-  
-     
-  <div class="row create-contract-tab hide">
-    <div class="row">
-      <div class="col s4">
-        <p id="blockchain_address"></p>
-        <p id="blockchain_privatekey"></p>
-      </div>
-    </div>
-
-    <div class="row">
-        <div class="col s4"></div>
-        <div class="col s4">
-          <form method="post" action="/uploader/upload" enctype="multipart/form-data" id="publication-form">
-          <!-- <h4>Contract</h4></br> -->
-          <div class="row">
-            <div class="col s8">
-              <div class="file-field input-field">
-                <div class="btn">
-                  <span>File</span>
-                  <input id="publication-file" name="publication-file" type="file" class="validate file-upload">
-                </div>
-                <div class="file-path-wrapper">
-                  <input class="file-path validate"  type="text">
-                </div>
-              </div>
-            </div>
-            <div class="input-field col s4">
-                <button id="submit-file" class="btn right file-upload">Upload File</button>
-              </div>
-          </div>
-          </form>
-        </div>
-        
-        <div class="col s4">
-          <button id="create-contract" class="btn right">Create Contract</button>
-        </div>
-        
-      </div>
-
-    </div>
-
-  </div>
-    
   <script src="js/dashboard.js"></script>
     </body>
 </html>

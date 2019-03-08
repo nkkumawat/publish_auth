@@ -5,6 +5,7 @@ const utilityService = require('../services/utilityService');
 const userService = require('../services/userService');
 const contractService = require('../services/contractService');
 
+
 const env = process.env.NODE_ENV || 'development';
 const config = require('../config/config.json')[env];
 
@@ -15,7 +16,7 @@ const ipfs = ipfsAPI('ipfs.infura.io', '5001', {protocol: 'https'})
 
 const web3js = require('../middlewares/web3js');
 var Tx = require('ethereumjs-tx')
-const onlineAuth = require('../contracts/OnlineBooksAuthenticity.json')
+const bookContract = require('../contracts/Book.json')
 
 router.get('/', function(req, res, next) {
     res.render('dashboard', {});
@@ -23,7 +24,7 @@ router.get('/', function(req, res, next) {
 
 
 router.post('/publish/create' , function(req,  res, next) {
-    const contract1 = new web3js.eth.Contract(onlineAuth.abi, null, { data:  onlineAuth.bytecode});
+    const bContract = new web3js.eth.Contract(bookContract.abi, null);
     var params = req.body;
     utilityService.decodeToken(params.user_token).then(userdecoded =>{
         userService.getUser(userdecoded).then(user =>{
@@ -31,22 +32,34 @@ router.post('/publish/create' , function(req,  res, next) {
             web3js.eth.getGasPrice().then((averageGasPrice) => {
                 console.log("Average gas price: " + averageGasPrice);
                 gasPrice = averageGasPrice;
-                contract1.deploy().estimateGas().then((estimatedGas) => {
+                bContract.deploy({
+                    data:  bookContract.bytecode,
+                    arguments: [params.publiaction_title, params.publication_hash]
+                }).estimateGas().then((estimatedGas) => {
                     console.log("Estimated gas: " + estimatedGas);
                     gas = estimatedGas +1;
-                    contract1.deploy().send({
+                    bContract.deploy({
+                        data:  bookContract.bytecode,
+                        arguments: [params.publiaction_title, params.publication_hash]
+                    }).send({
                         // from: user.blockchain_address,
                         from : "0x32B320475245069F7D629785882F5F704cE22196",
                         gasPrice: gasPrice, 
                         gas: gas
                     }).then((instance) => { 
                         console.log("Contract mined at " + instance.options.address);
-                        var params = {
+                        var contract_info = {
+                            "publication_title": params.publiaction_title,
+                            "publication_hash" : params.publication_hash
+                        }
+                        var params_con = {
                             user_address : user.blockchain_address,
                             contract_address: instance.options.address,
-                            contract_type: "publish"
+                            contract_type: "publish",
+                            user_id: user.id,
+                            contract_info: JSON.stringify(contract_info)
                         }
-                        contractService.saveContract(params).then(contract => {
+                        contractService.saveContract(params_con).then(contract => {
                             res.json({
                                 success: true,
                                 result : params
@@ -93,22 +106,63 @@ router.post('/publish/create' , function(req,  res, next) {
             result :  err
         })
     })
-})
+});
 
-router.get('/get', function(req, res, next) {
-    const contract1 = new web3js.eth.Contract(onlineAuth.abi, '0x04faC7AF93Fe95cD5ea126583Bd1a918A1B46c04');
-    contract1.methods.createContract().send( {from: '0x7dD4030E676B66D34424755C145992D184E48e7A'}).then(result => {
+
+router.post('/publish/getall' , function(req, res, next) {
+
+    contractService.getAll().then(contracts => {
         res.json({
             success: true,
-            result :  result
+            result :  contracts
         })
     }).catch(err => {
-        console.log(err)
         res.json({
             success: false,
             result :  err
         })
     })
+});
+
+
+router.get('/publish/blockchain/get', function(req, res, next) {
+    const bContract = new web3js.eth.Contract(bookContract.abi, '0x013876912a210a9748f484f289Fb696D53112c8B');
+    bContract.methods.getBookDetails().call( {from: '0x32B320475245069F7D629785882F5F704cE22196'} , (err , result)=>{
+        console.log(err , result);
+        if(err) {
+            res.json({
+                success: false,
+                result :  err
+            })
+        } else {
+            res.json({
+                success: true,
+                result :  result
+            })
+        }
+        
+    })
+    console.log("hello")
+
+
+
+    // bContract.methods.getBookDetails().call({from: '0x32B320475245069F7D629785882F5F704cE22196'})
+    // .then((result) => {
+    //     console.log("dgxdddddddg")
+    // });
+
+    // bContract.methods.getBookDetails().call( {from: '0x32B320475245069F7D629785882F5F704cE22196'}).then(result => {
+    //     res.json({
+    //         success: true,
+    //         result :  result
+    //     })
+    // }).catch(err => {
+    //     console.log(err)
+    //     res.json({
+    //         success: false,
+    //         result :  err
+    //     })
+    // })
 })
 
 // router.get('/create', function(req, res, next) {

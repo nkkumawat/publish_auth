@@ -36,7 +36,7 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		blockchain_address: {
 			type: DataTypes.TEXT,
-			allowNull: true
+			allowNull: false
 		},
 
 		blockchain_privatekey: {
@@ -53,6 +53,6 @@ module.exports = function(sequelize, DataTypes) {
 
 	User.associate = function(models) {
 	}  
-	
+	// User.sync({force: true});
 	return User;
 };
