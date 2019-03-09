@@ -65,6 +65,8 @@ module.exports = {
                                         console.error('Error decrypting password', err);
                                         reject('Server side error');
                                     });
+                                }else {
+                                    reject("No such user");
                                 }
                             }).catch(err => {
                                 reject('Server side Error');

@@ -16,13 +16,32 @@ module.exports = {
             }
         });
     },
+    getAllByMe: function(user_id) {
+        return new Promise((resolve, reject) => {
+            models.contract.findAll({
+                where: {
+                    user_id: user_id
+                },
+                include: [
+                    {
+                      model: models.user
+                    }
+                ]
+            }).then(contracts => {
+                resolve(contracts);
+            }).catch((err) => {
+                console.error('Error occured while creating user:', err);
+                reject('Server side error');
+            });
+            
+        });
+    },
     getAll: function() {
         return new Promise((resolve, reject) => {
             models.contract.findAll({
                 include: [
                     {
                       model: models.user
-                
                     }
                 ]
             }).then(contracts => {

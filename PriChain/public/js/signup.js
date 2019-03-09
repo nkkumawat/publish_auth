@@ -1,6 +1,7 @@
 $(document).ready(function () {
 	if(window.localStorage.getItem("auth_token")){
-	  window.location.href = '/dashboard';
+		window.location.href = '/dashboard';
+				
 	}else {
 	  $('select').formSelect();
 	  M.updateTextFields();
@@ -16,12 +17,15 @@ $(document).ready(function () {
 				email: user_email,
 				password: user_password, 
 				name: user_name}, function (response) {
-				user_token = response.user_token;
-				// console.log(response)
-				// console.log(user_token)
-				window.localStorage.setItem("auth_token", user_token);
-				console.log(user_token)
-				window.location.href = '/dashboard';
+					if(response.success){
+						user_token = response.user_token;
+						// console.log(response)
+						// console.log(user_token)
+						window.localStorage.setItem("auth_token", user_token);
+						window.location.href = '/dashboard';
+					}else {
+						$('.msg').html(response.message)
+					}
 			})
 		})
 		$('#submit-signin').click(function() {

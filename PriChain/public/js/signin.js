@@ -12,11 +12,16 @@ $(document).ready(function () {
 			$.post('/signin', {
 				email: user_email, 
 				password: user_password }, function (response) {
-				user_token = response.user_token;
-				// console.log(response)
-				// console.log(user_token)
-				window.localStorage.setItem("auth_token", user_token);
-				window.location.href = '/dashboard';
+					if(response.success){
+						user_token = response.user_token;
+						// console.log(response)
+						// console.log(user_token)
+						window.localStorage.setItem("auth_token", user_token);
+						window.location.href = '/dashboard';
+					}else {
+						$('.msg').html(response.message);
+					}
+				
 			})
 		})
 		$('#submit-signup').click(function() {

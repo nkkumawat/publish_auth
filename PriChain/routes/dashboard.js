@@ -27,7 +27,24 @@ router.use('/save', function(req, res, next) {
 });
 router.get('/', function(req, res, next) {
     // console.log("answer")
-    res.render('dashboard', {});
+    // var params = req.query;
+
+
+    var iam = req.cookies.role
+    console.log( req.cookies.role)
+    if(iam == "Author"){
+        res.render('dashboard_author', {});
+    }else if(iam == "Publisher") {
+        res.render('dashboard_publisher', {});
+    }else if(iam == "User") {
+        res.render('dashboard_user', {});
+    }else {
+        var error = {
+            status: 404,
+            stack : ""
+        }
+        res.render('error', {message: "NOT A ROUTE" , error : error });
+    }
 });
 
 router.post('/get/user/profile', function(req, res, next) {

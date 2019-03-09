@@ -39,7 +39,7 @@ module.exports = function(sequelize, DataTypes) {
 			allowNull: false
 		},
 
-		blockchain_privatekey: {
+		blockchain_contract_address: {
 			type: DataTypes.TEXT,
 			allowNull: true
 		},

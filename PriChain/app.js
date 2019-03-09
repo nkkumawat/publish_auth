@@ -14,7 +14,7 @@ const config = require('./config/config.json')[env];
  */
 const indexRoutes = require('./routes/index');
 const dashboardRoutes = require('./routes/dashboard'); 
-const contractRoutes = require('./routes/contract'); 
+const publishRoutes = require('./routes/publish'); 
 const uploadRoutes = require('./routes/uploader'); 
 
 const app = express();
@@ -55,13 +55,14 @@ app.use(function(req, res, next) {
  */
 app.use('/', indexRoutes);
 app.use('/dashboard', dashboardRoutes);
-app.use('/contract', contractRoutes);
+app.use('/publish', publishRoutes);
 app.use('/uploader', uploadRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     const err = new Error('Not Found');
     err.status = 404;
+    // err.desc = req;
     next(err);
 });
 

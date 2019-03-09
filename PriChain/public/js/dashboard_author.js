@@ -13,57 +13,57 @@ $(document).ready(function () {
         });
         $('#create-contract-link').click(function() {
             $('.load-data-tab').html(`  
-            <div class="card-panel">
-                <h4>Upload New Book for publish</h4><br>
-                <div class="row">
-                <div class="col s2 m2"></div>
-                <div class="col s8 m8">
-                    <div class="row ">
+            <div class="row">
+            <div class="col s2 m2"></div>
+            <div class="col s8 m8">
+                <div class="card-panel">
+                <h4 class="center">Upload New Book for publish</h4><br><br>
+                <div class="row ">
+                    <div class="col s2 m2"></div>
+                    <div class="col s8 m8">
+                    <div class="row">
+                    <div class="col s12 m12">
+                        <form method="post"  action="/uploader/upload" enctype="multipart/form-data" id="publication-form">
                         <div class="row">
-                            
-                            <div class="col s12 m12">
-                                <form method="post"  action="/uploader/upload" enctype="multipart/form-data" id="publication-form">
-                                <div class="row">
-                                    <div class="col s8">
-                                    <div class="file-field input-field">
-                                        <div class="btn">
-                                        <span>File</span>
-                                        <input id="publication-file" name="publication-file" type="file" class="validate file-upload">
-                                        </div>
-                                        <div class="file-path-wrapper">
-                                        <input class="file-path validate"  type="text">
-                                        </div>
-                                    </div>
-                                    </div>
-                                    <div class="input-field col s4">
-                                        <button id="submit-file" class="btn right file-upload">Upload File</button>
-                                    </div>
+                            <div class="col s8">
+                                <div class="file-field input-field">
+                                <div class="btn">
+                                    <span>File</span>
+                                    <input id="publication-file" name="publication-file" type="file" class="validate file-upload">
                                 </div>
-                                </form>
+                                <div class="file-path-wrapper">
+                                    <input class="file-path validate"  type="text">
+                                </div>
+                                </div>
                             </div>
-                            
+                            <div class="input-field col s4">
+                                <button id="submit-file" class="btn right file-upload">Upload File</button>
+                            </div>
                         </div>
-                            <div class="row">
-                            
-                            <div class="col s12 m12">
-                                <div class="row">
-                                    <div class="input-field col s12">
-                                        <input disabled id="disabled" id="publication-hash" type="text" class="validate file-path publication-hash">
-                                    </div>
-                                    </div>
-                                    <div class="row">
-                                    <div class="input-field col s12">
-                                        <input id="publication-title" type="text" class="validate publication-title">
-                                        <label for="publication-title">Titile of book</label>
-                                    </div>
-                                    </div>
-                                <button id="create-contract" class="btn right">Create Contract</button>
+                        </form>
+                    </div>
+                    </div>
+                    <div class="row"> 
+                    <div class="col s12 m12">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input disabled id="disabled" id="publication-hash" type="text" class="validate file-path publication-hash">
                             </div>
-                            
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="publication-title" type="text" class="validate publication-title">
+                                <label for="publication-title">Titile of book</label>
                             </div>
+                        </div>
+                        <button id="create-contract" class="btn right">Create Contract</button>
+                    </div>
                     </div>
                 </div>
+                <div class="col s2 m2"></div>
                 </div>
+                </div>
+            </div>
             </div>`);
           $('#publication-form').submit(function(e){
                 e.preventDefault();
@@ -91,14 +91,19 @@ $(document).ready(function () {
                 $('.progress').removeClass('hide');
                 var publiaction_title = $('.publication-title').val();
                 var publication_hash = $('.publication-hash').val();
-                $.post('/contract/publish/create', {
+                $.post('/publish/create', {
                     user_token: window.localStorage.getItem("auth_token"),
                     publiaction_title: publiaction_title,
                     publication_hash: publication_hash}, function (response) {
                     $('.progress').addClass('hide');
+                    if(response.success){
                     // console.log(response);
-                    M.toast({html: "<i class='material-icons medium'>apps</i>Contract Creted"})
-                    updateContractsTab();
+                        updateContractsTab();
+                        M.toast({html: "<i class='material-icons medium'>apps</i>Contract Creted"})
+                    }else {
+                        M.toast({html: "<i class='material-icons medium'>apps</i>" + response.result})
+                    }
+                    
                    
                 })
             });
@@ -123,13 +128,13 @@ $(document).ready(function () {
         function getPublicationInfo(contract_address) {
             console.log(contract_address);
             $('.progress').removeClass('hide');
-            $.post('/contract/publish/blockchain/get', {
+            $.post('/publish/blockchain/get', {
                 user_token: window.localStorage.getItem("auth_token"),
                 contract_address: contract_address}, function (response) {
                 if(response.success) {
-                    $('.load-data-tab').html(response.result._title);
-                    $('.load-data-tab').append(`<iframe src="`+response.result._ipfsHash.substring(6)+`"
-                            style="width:800px; height:800px;" frameborder="0">
+                    $('.load-data-tab').html(`<h4 class="center">`+response.result['3']+`<h4>`);
+                    $('.load-data-tab').append(`<iframe src="`+response.result['2'].substring(6)+`"
+                            style="width:900px; height:500px;" frameborder="0">
                         </iframe>`);
                     
                 }else {
@@ -142,7 +147,7 @@ $(document).ready(function () {
         function updateContractsTab() {
             $('.progress').removeClass('hide');
             $('.load-data-tab').html('');
-            $.post('/contract/publish/getall', {
+            $.post('/publish/getall/byme', {
                 user_token: window.localStorage.getItem("auth_token")}, function (response) {
                 if(response.success) {
                     response.result.forEach(contract => {
@@ -151,7 +156,7 @@ $(document).ready(function () {
                         <div class="col s4 m4">
                           <div class="card">
                             <div class="card-image">
-                              <img height="100" src="images/wall2.jpg">
+                              <img height="200" src="../images/wall2.jpg">
                               <span class="card-title">` +publication_info.publication_title+`</span>
                             </div>
                             <div class="card-content">
@@ -167,9 +172,12 @@ $(document).ready(function () {
                           getPublicationInfo(contract.contract_address);
                       })
                     });
+                    if(!response.result.length){
+                        $('.load-data-tab').append('No Publication By YOu');
+                    }
 
                 }else {
-                    $('.load-data-tab').append('No Publications');
+                    $('.load-data-tab').append('Some Error occured ! Try Again!!!!');
                 }
                 $('.progress').addClass('hide');
             })	
