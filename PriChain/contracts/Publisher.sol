@@ -1,7 +1,7 @@
 pragma solidity ^0.4.25;
 
-import "browser/Book.sol";
-import "browser/Author.sol";
+import "Book.sol";
+import "Author.sol";
 
 contract Publisher {
     
