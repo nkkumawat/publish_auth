@@ -4,6 +4,7 @@ const router = express.Router();
 const utilityService = require('../services/utilityService');
 const userService = require('../services/userService');
 const contractService = require('../services/contractService');
+const requestService = require('../services/requestService');
 
 
 const env = process.env.NODE_ENV || 'development';
@@ -17,6 +18,7 @@ const ipfs = ipfsAPI('ipfs.infura.io', '5001', {protocol: 'https'})
 const web3js = require('../middlewares/web3js');
 var Tx = require('ethereumjs-tx')
 const bookContract = require('../contracts/Book.json')
+const authorContract = require('../contracts/Author.json')
 const contractHelper = require('../middlewares/contractHelper');
 
 
@@ -137,6 +139,92 @@ router.post('/getall/byme' , function(req, res, next) {
                     result :  contracts
                 })
             }).catch(err => {
+                console.log(err);
+                res.json({
+                    success: false,
+                    result :  err
+                })
+            })
+        }).catch(err => {
+            console.log(err);
+            res.json({
+                success: false,
+                result :  err
+            })
+        })
+    }).catch(err => {
+        console.log(err);
+        res.json({
+            success: false,
+            result :  err
+        })
+    })
+});
+
+
+router.post('/request' , function(req, res, next) {
+    var params = req.body;
+    if(req.cookies.role != 'Publisher'){
+        res.json({
+            success : false,
+            result: "you are not a publisher"
+        })
+    }else {
+        utilityService.decodeToken(params.user_token).then(userdecoded =>{
+            userService.getUser(userdecoded).then(user =>{
+                var aContract = contractHelper.getContractInstance(authorContract.abi , params.author_address);
+                aContract.methods.requestApproval(user.blockchain_address , params.ipfs_hash, params.requested_contract_address)
+                .send( {/*from: user.blockchain_address*/from : "0x32B320475245069F7D629785882F5F704cE22196"}).then(result=>{  
+                    params.publisher_id = user.id;
+                    params.publisher_address = user.blockchain_address;
+                    requestService.saveRequest(params).then(request => {
+                        res.json({
+                            success: true,
+                            result : request
+                        })
+                    }).catch(err => {
+                        res.json({
+                            success: false,
+                            result :  err
+                        })
+                    })
+                                        
+                }).catch(err => {
+                    console.log(err)
+                    res.json({
+                        success: false,
+                        result :  err
+                    })
+                })
+            }).catch(err => {
+                console.log(err)
+                res.json({
+                    success: false,
+                    result :  err
+                })
+            })
+        }).catch(err => {
+            console.log(err)
+            res.json({
+                success: false,
+                result :  err
+            })
+        })
+    }
+
+});
+
+
+router.post('/request/count', function(req, res, next) {
+    var params = req.body;
+    utilityService.decodeToken(params.user_token).then(userdecoded =>{
+        userService.getUser(userdecoded).then(user =>{
+            requestService.getAllCount(user.id,req.cookies.role).then(requests => {
+                res.json({
+                    success: true,
+                    result : requests
+                })
+            }).catch(err => {
                 res.json({
                     success: false,
                     result :  err
@@ -154,16 +242,16 @@ router.post('/getall/byme' , function(req, res, next) {
             result :  err
         })
     })
-   
-});
 
+});
 
 router.post('/blockchain/get', function(req, res, next) {
     var params = req.body;
     console.log(params.contract_address);
-    const bContract = contractHelper.getContractInstance(bookContract.abi, params.contract_address);
+    
     utilityService.decodeToken(params.user_token).then(userdecoded =>{
         userService.getUser(userdecoded).then(user =>{
+            const bContract = contractHelper.getContractInstance(bookContract.abi, params.contract_address);
             bContract.methods.getBookInfo().call( {from: user.blockchain_address} , (err , result)=>{
                 console.log(result);
                 if(err) {

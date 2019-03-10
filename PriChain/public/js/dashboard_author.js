@@ -7,6 +7,19 @@ $(document).ready(function () {
 
         updateContractsTab();		
         getUserInfo();
+        getRequestsCount();
+
+        function getRequestsCount() {
+            $.post('/publish/request/count', {
+              user_token: window.localStorage.getItem("auth_token")}, function (response) {
+                  console.log(response)
+              if(response.success) {
+                $('.request-numbers').html(response.result);
+              }else {
+                // console.log("asdsdas")
+              }
+            });
+          }
 
         $('#all-contract-link').click(function() {
             updateContractsTab();
@@ -87,6 +100,7 @@ $(document).ready(function () {
                     }
                 });
             });
+            
             $('#create-contract').click(function() {
                 $('.progress').removeClass('hide');
                 var publiaction_title = $('.publication-title').val();
@@ -163,7 +177,12 @@ $(document).ready(function () {
                               <p>Created By : `+contract.user.name+`</p>
                             </div>
                             <div class="card-action">
-                              <a id="contract-`+contract.id+`" style="cursor: pointer;">Open</a>
+                            <a id="contract-`+contract.id+`dwn" style="cursor: pointer;">
+                                <i class="material-icons">file_download</i>
+                            </a>
+                            <a id="contract-`+contract.id+`" style="cursor: pointer;">
+                                <i class="material-icons">open_in_new</i>
+                            </a>
                             </div>
                           </div>
                         </div>

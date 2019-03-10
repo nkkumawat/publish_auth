@@ -24,7 +24,8 @@ module.exports = {
                 },
                 include: [
                     {
-                      model: models.user
+                      model: models.user,
+                      attributes: ['id', 'name' , 'email' , 'blockchain_address']
                     }
                 ]
             }).then(contracts => {
@@ -41,7 +42,9 @@ module.exports = {
             models.contract.findAll({
                 include: [
                     {
-                      model: models.user
+                        model: models.user,
+                        attributes: ['id', 'name']
+                      
                     }
                 ]
             }).then(contracts => {
