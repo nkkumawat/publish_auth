@@ -19,7 +19,102 @@ $(document).ready(function () {
                 // console.log("asdsdas")
               }
             });
-          }
+        }
+
+        function getRequestsForMe() {
+            $.post('/publish/request/get', {
+                user_token: window.localStorage.getItem("auth_token")}, function (response) {
+                if(response.success) {
+                  if(response.result.length){
+                  $('.load-data-tab').html(`<table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>For</th>
+                                <th>Distributer Name</th>
+                                <th>Time</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="request-table"></tbody>
+                    </table>`);
+                  response.result.forEach(request => {
+                    //   console.log(request)
+                      var publication_info = JSON.parse(request.contract.contract_info);
+                      console.log(publication_info)
+                      $('#request-table').append(`
+                        <tr>
+                            <td><img width="30" height="30" src="images/wall3.jpg"/> </td>
+                            <td>${publication_info.publication_title}
+                            <a id="contract-`+request.contract.id+`" style="cursor: pointer;">
+                                <i class="material-icons">open_in_new</i>
+                            </a>
+                            </td>
+                            <td>${request.user.name}</td>
+                            <td>${request.createdAt}</td>
+                            <td>
+                                <a id="request-app-`+request.id+`" style="cursor: pointer;">
+                                    <i class="material-icons">check</i>
+                                </a>
+                            </td>
+                            <td>
+                                <a id="request-rej-`+request.id+`" style="cursor: pointer;">
+                                    <i class="material-icons">close</i>
+                                </a>
+                            </td>
+                        </tr>
+                      `);
+                        $('#contract-'+request.contract.id).click(function() {
+                            getPublicationInfo(request.contract.contract_address);
+                        })
+                        $('#request-app-'+request.id).click(function() {
+                            requestApprove(request);
+                        })
+                        $('#request-rej-'+request.id).click(function() {
+                            // getPublicationInfo(request.contract.contract_address);
+                            requestReject(request);
+                        })
+                  })
+                }else {
+                    $('.load-data-tab').html("No Requests");
+                }
+
+                }else {
+                    $('.load-data-tab').html(response.result);
+                }
+              });
+        }
+
+        function requestApprove(request) {
+            console.log("approve");
+            $.post('/publish/request/approve', {
+                user_token: window.localStorage.getItem("auth_token"),
+                author_address: request.contract.user_address,
+                author_contract_address: request.contract.user_contract_address,
+                requested_contract_address: request.contract.contract_address,
+                author_id: request.contract.user_id,
+                contract_id: request.contract.id,
+                request_blockchain_id: request.request_blockchain_id }, function (response) {
+                // console.log(response);
+                if(response.success) {
+                  M.toast({html: "<i class='material-icons medium'>apps</i>" +" Request Apporved!!"})
+                  getRequestsCount();
+                }else {
+                  M.toast({html: "<i class='material-icons medium'>apps</i>" + response.result})
+                }
+            });
+              
+        }
+        function requestReject(request) {
+            console.log("reject")
+        }
+
+
+        $("#requests-for-me").click(function() {
+            getRequestsForMe();
+            console.log("nk")
+        })
 
         $('#all-contract-link').click(function() {
             updateContractsTab();

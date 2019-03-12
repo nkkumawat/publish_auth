@@ -22,6 +22,11 @@ module.exports = function(sequelize, DataTypes) {
 			allowNull: false,
 						
 		},
+		user_contract_address: {
+			type: DataTypes.TEXT,
+			allowNull: false,
+						
+		},
 		contract_type: {
 			type: DataTypes.STRING,
 			allowNull: true

@@ -40,9 +40,13 @@ contract Author {
         unpublishedBooks.push(book);
     }
     
-    function requestApproval(address _pubAddr, string memory _ipfsHash, address _bookAddr) NotMe public {
+    function requestApproval(address _pubAddr, string memory _ipfsHash, address _bookAddr) NotMe public  {
         requests.push(Request(_pubAddr, _ipfsHash, _bookAddr));
         //add event
+    }
+    
+    function getRequestIndex() view public returns( uint ) {
+        return (requests.length);
     }
     
     function approveRequest(uint index) OnlyMe public {

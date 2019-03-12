@@ -54,6 +54,7 @@ $(document).ready(function () {
                         $.post('/publish/request', {
                           user_token: window.localStorage.getItem("auth_token"),
                           author_address: contract.user_address,
+                          author_contract_address: contract.user_contract_address,
                           requested_contract_address: contract.contract_address,
                           ipfs_hash: publication_info.publication_hash,
                           author_id: contract.user_id,

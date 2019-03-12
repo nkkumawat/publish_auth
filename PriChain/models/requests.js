@@ -8,6 +8,10 @@ module.exports = function(sequelize, DataTypes) {
 			autoIncrement: true,
 			primaryKey: true
 		},
+		request_blockchain_id: { 
+			type: DataTypes.INTEGER,
+			allowNull: false
+		},
 		author_id: { 
 			type: DataTypes.INTEGER,
 			allowNull: false
@@ -30,7 +34,7 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		contract_id: {
 			type: DataTypes.INTEGER,
-			allowNull: true
+			allowNull: false
 		}
 	}, {
 		timestamp: true,

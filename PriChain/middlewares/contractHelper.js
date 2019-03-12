@@ -1,5 +1,3 @@
-const env = process.env.NODE_ENV || 'development';
-
 const web3js = require('./web3js');
 
 module.exports = {

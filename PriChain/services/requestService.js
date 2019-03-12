@@ -13,55 +13,60 @@ module.exports = {
             
         });
     },
+
     getAllCount: function(user_id , role) {
         if(role =='Author'){
-            return new Promise((resolve, reject) => {
-                models.request.count({
-                    where: {
-                        author_id: user_id
-                    }
-                }).then(request => {
-                    resolve(request);
-                }).catch((err) => {
-                    console.error('Error occured while creating user:', err);
-                    reject('Server side error');
-                });
-                
-            });
+            condition = {
+                author_id : user_id
+            }           
         }else {
-            return new Promise((resolve, reject) => {
-                models.request.count({
-                    where: {
-                        publisher_id: user_id
-                    }
-                }).then(request => {
-                    resolve(request);
-                }).catch((err) => {
-                    console.error('Error occured while creating user:', err);
-                    reject('Server side error');
-                });
-                
-            });
+            condition = {
+                publisher_id: user_id
+            }
         }
-        
-    },
-    getAll: function() {
-        // return new Promise((resolve, reject) => {
-        //     models.contract.findAll({
-        //         include: [
-        //             {
-        //                 model: models.user,
-        //                 attributes: ['id', 'name']
-                      
-        //             }
-        //         ]
-        //     }).then(contracts => {
-        //         resolve(contracts);
-        //     }).catch((err) => {
-        //         console.error('Error occured while creating user:', err);
-        //         reject('Server side error');
-        //     });
+        return new Promise((resolve, reject) => {
+            models.request.count({
+                where: condition
+            }).then(request => {
+                resolve(request);
+            }).catch((err) => {
+                console.error('Error occured while creating user:', err);
+                reject('Server side error');
+            });
             
-        // });
+        });
+    },
+
+    getAllForMe: function(user_id , role) {
+        if(role == 'Author'){
+            condition = {
+                author_id: user_id
+            }
+        }else {
+            condition = {
+                publisher_id: user_id
+            }
+        }
+        return new Promise((resolve, reject) => {
+            models.request.findAll({
+                where : condition,
+                include: [
+                    {
+                        model: models.user,
+                        attributes: ['id', 'name']
+                    
+                    }, 
+                    {
+                        model: models.contract
+                    }
+                ]
+            }).then(requests => {
+                resolve(requests);
+            }).catch((err) => {
+                console.error('Error occured while creating user:', err);
+                reject('Server side error');
+            });
+            
+        });
     }
 };

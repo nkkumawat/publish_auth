@@ -39,11 +39,7 @@ router.get('/', function(req, res, next) {
     }else if(iam == "User") {
         res.render('dashboard_user', {});
     }else {
-        var error = {
-            status: 404,
-            stack : ""
-        }
-        res.render('error', {message: "NOT A ROUTE" , error : error });
+        res.redirect('logout');
     }
 });
 
