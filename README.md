@@ -16,7 +16,7 @@ testrpc
 open another tab in terminal and type
 ```bash
 git clone https://github.com/nkkumawat/publish_auth
-cd publish_auth
+cd publish_auth/PriChain
 npm install
 npm start
 
