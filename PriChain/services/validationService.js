@@ -1,7 +1,6 @@
 const models = require('../models');
 
 module.exports = {
-
 	doesSuchUserExist: function(param) {
 		return new Promise((resolve, reject) => {
 			let condition = {
@@ -17,7 +16,6 @@ module.exports = {
 					id: param
 				}
 			}
-			
 			models.user.findOne({
 				where: condition
 			}).then((user) => {
@@ -31,5 +29,4 @@ module.exports = {
 			});
 		});
 	}
-
 };

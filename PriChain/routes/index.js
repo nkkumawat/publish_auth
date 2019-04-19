@@ -10,6 +10,7 @@ const config = require('../config/config.json')[env];
 const web3js = require('../middlewares/web3js');
 const authorConract = require('../contracts/Author.json');
 const publisherConract = require('../contracts/Publisher.json');
+const userConract = require('../contracts/User.json');
 const contractHelper = require('../middlewares/contractHelper');
 
 /* GET home page. */
@@ -48,10 +49,6 @@ router.post('/signin', (req, res, next) => {
 
 router.post('/signup', function(req, res, next) {
 	const params = req.body;
-	// const block_chain_account = web3js.eth.accounts.create();
-	// console.log(block_chain_account)
-	// params.blockchain_address = block_chain_account.address
-	// params.blockchain_privatekey = block_chain_account.privateKey
 	web3js.eth.personal.newAccount(params.password).then(block_chain_user => {
 		console.log(block_chain_user)
 		web3js.eth.personal.unlockAccount(block_chain_user, params.password, 150000).then(user => {
@@ -63,7 +60,7 @@ router.post('/signup', function(req, res, next) {
 			}else if(params.role == "Publisher") {
 				contractInstance = contractHelper.getContractInstance(publisherConract.abi, null);
 			}else {
-				contractInstance = "yet to be implimented";
+				contractInstance = contractHelper.getContractInstance(userConract.abi, null);
 			}
 			web3js.eth.getGasPrice().then((averageGasPrice) => {
                 console.log("Average gas price: " + averageGasPrice);
@@ -79,7 +76,7 @@ router.post('/signup', function(req, res, next) {
                         arguments: [params.name]
                     }).send({
                         // from: user.blockchain_address,
-                        from : "0xb0a37d82c0757C3d34982bfe1b88C6FD674b6341",
+                        from : config.defaultUserAddress,
                         gasPrice: gasPrice, 
                         gas: gas
                     }).then((instance) => { 
@@ -132,6 +129,44 @@ router.post('/signup', function(req, res, next) {
 		})
 	});	
 });
+
+router.post('/update', (req, res, next) => {
+	const params = req.body;
+	utilityService.decodeToken(params.user_token).then(userdecoded =>{
+        userService.getUser(userdecoded)
+        .then(user => {
+			console.log(user.email);
+			params.email = user.email;
+            userService.updateUser(params)
+				.then(user => {
+					res.json({
+						success: true,
+						user : user
+					});
+				}).catch(err => {
+					console.log(err);
+					res.json({
+						success: false,
+						message: err
+					});
+				});
+        }).catch(err => {
+			console.log(err);
+            res.json({
+                success: false,
+                message: err
+            });
+        });
+    }).catch(err => {
+		console.log(err);
+        res.json({
+            success: false,
+            message: err
+        })
+    })
+	
+});
+
 router.get('/logout', function(req, res, next) {
 	res.clearCookie('role');
 	res.render('logout');

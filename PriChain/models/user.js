@@ -46,6 +46,10 @@ module.exports = function(sequelize, DataTypes) {
 		block_number: {
 			type: DataTypes.INTEGER,
 			allowNull: true
+		},
+		picture_url: {
+			type: DataTypes.STRING,
+			defaultValue: "/public/images/avatar_m.jpeg",
 		}
 	}, {
 		timestamp: true

@@ -12,10 +12,12 @@ $(document).ready(function () {
 			const user_email = $('#user-email').val();
 			const user_password = $('#user-password').val();
 			const user_name = $('#user-name').val();
+			const user_mobile = $('#user-mobile').val();
 			$.post('/signup', {
 				role : user_type ,
 				email: user_email,
 				password: user_password, 
+				mobile: user_mobile,
 				name: user_name}, function (response) {
 					if(response.success){
 						user_token = response.user_token;

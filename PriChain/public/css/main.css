@@ -2,3 +2,15 @@
     background: grey;
     padding: 4px;
 }
+.profile-card {
+    padding: 30px;
+}
+.profile-name-card {
+    margin: 30px;
+}
+.sign-card{
+    background-image: url('../images/back.jpg');
+}
+a {
+    cursor: pointer;
+}

@@ -2,12 +2,12 @@ const env = process.env.NODE_ENV || 'development';
 const models = require('../models');
 
 module.exports = {
-    saveContract: function(params) {
+    saveContractInfo: function(params) {
         return new Promise((resolve, reject) => {
-            if (!params.user_address || !params.contract_address || !params.contract_type) {
+            if (!params.contract_address) {
                 reject('Missing params');
             } else {
-                models.contract.create(params).then(contract => {
+                models.bookAuthor.create(params).then(contract => {
                     resolve(contract.dataValues);
                 }).catch((err) => {
                     console.error('Error occured while creating user:', err);
@@ -16,17 +16,9 @@ module.exports = {
             }
         });
     },
-    getAllByMe: function(user_id) {
+    getAll: function() {
         return new Promise((resolve, reject) => {
-            models.contract.findAll({
-                where: {
-                    user_id: user_id
-                },
-                include: [{
-                      model: models.user,
-                      attributes: ['id', 'name' , 'email' , 'blockchain_address']
-                    }]
-            }).then(contracts => {
+            models.bookAuthor.findAll().then(contracts => {
                 resolve(contracts);
             }).catch((err) => {
                 console.error('Error occured while creating user:', err);
@@ -35,19 +27,20 @@ module.exports = {
             
         });
     },
-    getAll: function() {
+    getCount: function() {
         return new Promise((resolve, reject) => {
-            models.contract.findAll({
-                include: [{
-                        model: models.user,
-                        attributes: ['id', 'name'] 
-                    }]
-            }).then(contracts => {
-                resolve(contracts);
+            models.bookAuthor.findAll().then(contracts => {
+                console.log(contracts.length,"narendra");
+                if(!contracts.length){
+                    resolve(1);
+                }else {
+                    resolve(0);
+                }
             }).catch((err) => {
                 console.error('Error occured while creating user:', err);
-                reject('Server side error');
+                reject(0);
             });
+            
         });
     }
 };

@@ -35,6 +35,10 @@ module.exports = function(sequelize, DataTypes) {
 		contract_id: {
 			type: DataTypes.INTEGER,
 			allowNull: false
+		},
+		approved: {
+			type: DataTypes.STRING,
+			defaultValue: "no"
 		}
 	}, {
 		timestamp: true,

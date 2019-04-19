@@ -7,11 +7,6 @@ const userService = require('../services/userService');
 const env = process.env.NODE_ENV || 'development';
 const config = require('../config/config.json')[env];
 
-const middlewares = require('../middlewares');
-
-// middleware to verify a token
-// router.use(middlewares.verifyToken);
-
 router.use('/save', function(req, res, next) {
     const params = req.body;
     try {
@@ -26,10 +21,6 @@ router.use('/save', function(req, res, next) {
     next();
 });
 router.get('/', function(req, res, next) {
-    // console.log("answer")
-    // var params = req.query;
-
-
     var iam = req.cookies.role
     console.log( req.cookies.role)
     if(iam == "Author"){
@@ -54,6 +45,32 @@ router.post('/get/user/profile', function(req, res, next) {
                 result: user
             });
         }).catch(err => {
+            res.json({
+                success: false,
+                message: err
+            });
+        });
+    }).catch(err => {
+        res.json({
+            success: false,
+            message: err
+        })
+    })
+});
+
+router.post('/get/distributer/profile', function(req, res, next) {
+    console.log("profile");
+    const params = req.body;
+    console.log(params);
+    utilityService.decodeToken(params.user_token).then(userdecoded =>{
+        userService.getUser(params)
+        .then(user => {
+            res.json({
+                success: true,
+                result: user
+            });
+        }).catch(err => {
+            console.log(err);
             res.json({
                 success: false,
                 message: err

@@ -51,9 +51,10 @@ module.exports = {
                             models.user.findOne({
                                 where: {
                                     email: params.email
-                                }
+                                },
                             }).then(user => {
                                 if (user) {
+                                    console.log(params.password, user.dataValues.password);
                                     bcrypt.compare(params.password, user.dataValues.password)
                                         .then(function(res) {
                                             if (res == true) {
@@ -63,7 +64,7 @@ module.exports = {
                                             }
                                     }).catch((err) => {
                                         console.error('Error decrypting password', err);
-                                        reject('Server side error');
+                                        reject('Server side error'+err);
                                     });
                                 }else {
                                     reject("No such user");
@@ -93,10 +94,13 @@ module.exports = {
                             models.user.findOne({
                                 where: {
                                     email: params.email
-                                }
+                                },
+                                attributes: { exclude: ['password'] }
                             }).then(user => {
                                 if (user) {
                                     resolve(user.dataValues);
+                                }else{
+                                    reject("no user");
                                 }
                             }).catch(err => {
                                 reject('Server side Error');
@@ -111,7 +115,28 @@ module.exports = {
             }
         });
     },
-
+    getUserByContractAddress: function(params) {
+        return new Promise((resolve, reject) => {
+            if (!params.blockchain_contract_address) {
+                reject('Invalid Request');
+            } else {     
+                models.user.findOne({
+                    where: {
+                        blockchain_contract_address: params.blockchain_contract_address
+                    },
+                    attributes: { exclude: ['password'] }
+                }).then(user => {
+                    if (user) {
+                        resolve(user.dataValues);
+                    }else {
+                        reject("no user");
+                    }
+                }).catch(err => {
+                    reject('Server side Error');
+                })      
+            }
+        });
+    },
     updateUser: function(params) {
         return new Promise((resolve, reject) => {
             if (!params.email) {
@@ -120,7 +145,8 @@ module.exports = {
                 models.user.findOne({
                     where: {
                         email: params.email
-                    }
+                    },
+                    attributes: { exclude: ['password'] }
                 }).then(user => {
                     if (user) {
                         user.updateAttributes(params)

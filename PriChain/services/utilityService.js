@@ -12,9 +12,6 @@ module.exports = {
 
     getToken: function(user) {
         let expiresIn = 2 * 60 * 60 
-      
-
-        // create a token
         const token = jwt.sign({
             name: user.name,
             id: user.id,

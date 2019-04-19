@@ -14,7 +14,7 @@ contract Book {
         _;
     }
     
-    constructor(string memory _title, string memory _ipfsHash, address _authContract) public {
+    constructor(string memory _title, string memory _ipfsHash, address _authContract) public payable {
         title = _title;
         ipfsHash = _ipfsHash;
         author = msg.sender;

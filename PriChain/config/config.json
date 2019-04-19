@@ -1,18 +1,22 @@
 {
     "development": {
-        "username": "root",
+        "username": "root1",
         "password": "1234",
         "database": "publish",
         "host": "localhost",
         "dialect": "mysql",
-        "superSecret": "asdfghjkloiuytrewqasderfgtrfde-SECRET"
+        "superSecret": "asdfghjkloiuytrewqasderfgtrfde-SECRET",
+        "defaultUserAddress": "0x83A5F28A6bC017233efb2B95141aceBBb36563f4",
+        "defaultUserAddressSUP": "0xAe1dA423f41E0d4A651AEB6CA83a869951D7236a"
     },
     "production": {
-        "username": "root",
+        "username": "root1",
         "password": "1234",
         "database": "publish",
         "host": "localhost",
         "dialect": "mysql",
-        "superSecret": "asdfghjkloiuytrewqasderfgtrfde-SECRET"
+        "superSecret": "asdfghjkloiuytrewqasderfgtrfde-SECRET",
+        "defaultUserAddress": "0x83A5F28A6bC017233efb2B95141aceBBb36563f4",
+        "defaultUserAddressSUP": "0xAe1dA423f41E0d4A651AEB6CA83a869951D7236a"
     }
 }

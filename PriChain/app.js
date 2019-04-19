@@ -1,17 +1,10 @@
 
 const express = require('express');
 const path = require('path');
-//const favicon = require('serve-favicon');
-
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-
 const env = process.env.NODE_ENV || 'development';
 const config = require('./config/config.json')[env];
-
-/**
- * Get all routes here
- */
 const indexRoutes = require('./routes/index');
 const dashboardRoutes = require('./routes/dashboard'); 
 const publishRoutes = require('./routes/publish'); 
@@ -48,6 +41,17 @@ app.use(function(req, res, next) {
         console.log('\x1b[33m%s\x1b[0m', '---------------------------------');
     }
     next();
+});
+
+
+const bookAuthor = require("./middlewares/bookAuthorContract");
+const bookAuthorService = require("./services/bookAuthorService");
+bookAuthorService.getCount().then(result => {
+    if(result){
+        bookAuthor.createContract();
+    }
+}).catch(err => {
+    console.log(err);
 });
 
 /**

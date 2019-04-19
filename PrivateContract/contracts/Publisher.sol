@@ -26,7 +26,7 @@ contract Publisher {
         myAddress = msg.sender;
     }
     
-    function requestApproval(address bookAddr, string memory ipfsHash) OnlyMe public {
+    function requestApproval(address bookAddr, string memory ipfsHash) OnlyMe public  {
         //check book not published
         Book book = Book(bookAddr);
         //send author address directly as parameter
