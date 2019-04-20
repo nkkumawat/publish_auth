@@ -5,7 +5,6 @@ $(document).ready(function () {
 	}else {
         $('.sidenav').sidenav();
         M.updateTextFields();
-
         updateContractsTab();		
         getUserInfo();
         getRequestsCount();
@@ -60,7 +59,7 @@ $(document).ready(function () {
                                 </a>
                             </td>
                             <td>
-                                <a id="request-rej-`+request.id+`" style="cursor: pointer;">
+                                <a id="request-delete-`+request.id+`" style="cursor: pointer;">
                                     <i class="material-icons">close</i>
                                 </a>
                             </td>
@@ -78,9 +77,9 @@ $(document).ready(function () {
                             console.log(request.user)
                             getDistributer(request.user.email);
                         })
-                        $('#request-rej-'+request.id).click(function() {
+                        $('#request-delete-'+request.id).click(function() {
                             // getPublicationInfo(request.contract.contract_address);
-                            requestReject(request);
+                            deleteRequest(request);
                         })
                   })
                 }else {
@@ -166,9 +165,6 @@ $(document).ready(function () {
                 }
             });
         }
-        function requestReject(request) {
-            console.log("reject")
-        }
 
         $("#requests-for-me").click(function() {
             getRequestsForMe();
@@ -193,19 +189,19 @@ $(document).ready(function () {
                     <div class="col s12 m12">
                         <form method="post"  action="/uploader/upload" enctype="multipart/form-data" id="publication-form">
                         <div class="row">
-                            <div class="col s8">
+                            <div class="col s10">
                                 <div class="file-field input-field">
-                                <div class="btn">
+                                <div class="btn blue-grey darken-3">
                                     <span>File</span>
-                                    <input id="publication-file" name="publication-file" type="file" class="validate file-upload">
+                                    <input id="publication-file" name="publication-file" type="file" class="validate file-upload blue-grey darken-3">
                                 </div>
                                 <div class="file-path-wrapper">
                                     <input  class="file-path validate"  type="text">
                                 </div>
                                 </div>
                             </div>
-                            <div class="input-field col s4">
-                                <button id="submit-file" class="btn right file-upload">Upload File</button>
+                            <div class="input-field col s2 blue-grey darken-3" style="padding-top:5px; padding-bottom:5px; border-radius: 2px;">
+                                <button id="submit-file"    class="btn right file-upload transparent">  <i class="material-icons">file_upload</i> </button>
                             </div>
                         </div>
                         </form>
@@ -220,7 +216,7 @@ $(document).ready(function () {
                                 <label for="publication-title">Titile of book</label>
                             </div>
                         </div>
-                        <button id="create-contract" class="btn right">Create Contract</button>
+                        <button id="create-contract" class="btn right blue-grey darken-3">Create Contract</button>
                     </div>
                     </div>
                 </div>
@@ -312,6 +308,22 @@ $(document).ready(function () {
                 $('.progress').addClass('hide');
             })
         }
+
+        function deleteRequest(request) {
+            $('.progress').removeClass('hide');
+            $.post('/publish/request/delete', {
+              user_token: window.localStorage.getItem("auth_token"),
+              request_id : request.id}, function (response) {
+              $('.progress').addClass('hide');
+              if(response.success){
+                  getRequestsForMe();
+                  getRequestsCount();
+                  M.toast({html: "<i class='material-icons medium'>apps</i>Request Deleted"})
+              }else {
+                  M.toast({html: "<i class='material-icons medium'>apps</i>" + "Some Error"})
+              }
+            }) 
+          } 
         
         function updateContractsTab() {
             $('.progress').removeClass('hide');
@@ -325,8 +337,7 @@ $(document).ready(function () {
                         <div class="col s4 m4">
                           <div class="card">
                             <div class="card-image">
-                              <img height="200" src="`+publication_info.thumbnail.substr(7)+`">
-                              
+                              <img height="200" src="`+publication_info.thumbnail.substr(7)+`">                              
                             </div>
                             <div class="card-content">
                             <span class="card-title">` +publication_info.publication_title+`</span>
@@ -404,6 +415,7 @@ $(document).ready(function () {
                     <div id="email"><b>Email: </b>`+usr.result.email+`</div>
                     <div id="mobile"><b>Mobile: </b>`+usr.result.mobile+`</div>
                     <div id="blockchain-address"><b>BlockChain Address: </b>`+usr.result.blockchain_address+`</div> 
+                    <div id="blockchain-contract-address"><b>Contract Address: </b>`+usr.result.blockchain_contract_address+`</div> 
                     </div>
                 </div>
                 </div>

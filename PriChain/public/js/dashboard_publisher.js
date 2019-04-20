@@ -142,7 +142,7 @@ $(document).ready(function () {
             }else {
                 M.toast({html: "<i class='material-icons medium'>apps</i>" + "Some Error"})
             }
-        }) 
+          }) 
         }        
         function updateContractsTab() {
             $('.progress').removeClass('hide');

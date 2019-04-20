@@ -26,9 +26,9 @@ $(document).ready(function () {
                         <div class="col s12 m12">
                             <form method="post"  action="/uploader/upload" enctype="multipart/form-data" id="publication-form">
                             <div class="row">
-                                <div class="col s8">
+                                <div class="col s10">
                                     <div class="file-field input-field">
-                                    <div class="btn">
+                                    <div class="btn blue-grey darken-3">
                                         <span>File</span>
                                         <input id="publication-file" name="publication-file" type="file" class="validate file-upload">
                                     </div>
@@ -37,8 +37,8 @@ $(document).ready(function () {
                                     </div>
                                     </div>
                                 </div>
-                                <div class="input-field col s4">
-                                    <button id="submit-file" class="btn right file-upload">Upload File</button>
+                                <div class="input-field col s2 blue-grey darken-3" style="padding-top:5px; padding-bottom:5px; border-radius: 2px;">
+                                    <button id="submit-file"  class="btn right file-upload transparent" ><i class="material-icons">file_upload</i></button>
                                 </div>
                             </div>
                             </form>
@@ -47,7 +47,7 @@ $(document).ready(function () {
                     <div class="row"> 
                         <input hidden disabled id="disabled" id="publication-hash" type="text" class="validate file-path publication-hash">
                         <div class="col s12 m12">
-                            <button id="create-contract" class="btn right">Check</button>
+                            <button id="create-contract" class="btn right blue-grey darken-3">Check</button>
                         </div>
                     </div>
                     </div>
@@ -62,6 +62,7 @@ $(document).ready(function () {
        
             $('#publication-form').submit(function(e){
                 e.preventDefault();
+                $('.loader').removeClass('hide');
                 $('.progress').removeClass('hide');
                 $(this).ajaxSubmit({
                     data: {},
@@ -69,15 +70,18 @@ $(document).ready(function () {
                     success: function(result){  
                         if(result.success) {
                         $('.progress').addClass('hide');
+                        $('.loader').addClass('hide');
                         $('.file-path').val(result.filepath);
                     
                         }else {
                             $('.progress').addClass('hide');
+                            $('.loader').addClass('hide');
                             $('.file-path').val("Error Upload Again");
                         }
                     },
                     error: function (err) {
                         $('.progress').addClass('hide');
+                        $('.loader').addClass('hide');
                         $('.file-path').val("Error Upload Again");
                     }
                 });
@@ -85,11 +89,13 @@ $(document).ready(function () {
 
             $('#create-contract').click(function() {
                 $('.progress').removeClass('hide');
+                $('.loader').removeClass('hide');
                 var publication_hash = $('.publication-hash').val();
                 $.post('/publish/checkauth', {
                     user_token: window.localStorage.getItem("auth_token"),
                     publication_hash: publication_hash}, function (response) {
                     $('.progress').addClass('hide');
+                    $('.loader').addClass('hide');
                     console.log(response);
                     if(response.success){
                         M.toast({html: "<i class='material-icons medium'>apps</i>" + response.message});
@@ -121,6 +127,7 @@ $(document).ready(function () {
 
         function updateContractsTab() {
             $('.progress').removeClass('hide');
+            $('.loader').removeClass('hide');
             $('.load-data-tab').html('');
             $.post('/publish/getallpublished', {
                 user_token: window.localStorage.getItem("auth_token")}, function (response) {
@@ -155,6 +162,7 @@ $(document).ready(function () {
                       })
                       $('#contract-'+contract.id+"dwn").click(function() {
                         $('.progress').removeClass('hide');
+                        $('.loader').removeClass('hide');
                         $.post('/publish/blockchain/get', {
                             user_token: window.localStorage.getItem("auth_token"),
                             contract_address: contract.contract_address}, function (response) {
@@ -165,6 +173,7 @@ $(document).ready(function () {
                                 $('.load-data-tab').append('Error');
                             }
                             $('.progress').addClass('hide');
+                            $('.loader').addClass('hide');
                         });
                       })
                       $('#contract-'+contract.id+'req').click(function() {
@@ -193,6 +202,7 @@ $(document).ready(function () {
                     $('.load-data-tab').append('Some Error occured ! Try Again!!!!');
                 }
                 $('.progress').addClass('hide');
+                $('.loader').addClass('hide');
             })	
         } 
         
@@ -218,6 +228,7 @@ $(document).ready(function () {
         function getPublicationInfo(contract_address) {
             // console.log(contract_address);
             $('.progress').removeClass('hide');
+            $('.loader').removeClass('hide');
             $.post('/publish/blockchain/get', {
                 user_token: window.localStorage.getItem("auth_token"),
                 contract_address: contract_address}, function (response) {
@@ -231,6 +242,7 @@ $(document).ready(function () {
                     $('.load-data-tab').append('Error');
                 }
                 $('.progress').addClass('hide');
+                $('.loader').addClass('hide');
             })
         }
         $('#profile-tab').click(function() {
@@ -265,6 +277,7 @@ $(document).ready(function () {
             $('#profile-picture-upload-form').submit(function(e){
                 e.preventDefault();
                 $('.progress').removeClass('hide');
+                $('.loader').removeClass('hide');
                 $(this).ajaxSubmit({
                     data: {},
                     contentType: 'application/json',
@@ -277,11 +290,13 @@ $(document).ready(function () {
                     
                         }else {
                             $('.progress').addClass('hide');
+                            $('.loader').addClass('hide');
                             // $('.file-path').val("Error Upload Again");
                         }
                     },
                     error: function (err) {
                         $('.progress').addClass('hide');
+                        $('.loader').addClass('hide');
                         $('.file-path').val("Error Upload Again");
                     }
                 });
@@ -292,6 +307,7 @@ $(document).ready(function () {
                     user_token: window.localStorage.getItem("auth_token"),
                     picture_url : newPath}, function (response) {
                     $('.progress').addClass('hide');
+                    $('.loader').addClass('hide');
                     if(response.success){
                         console.log(response.user.picture_url);
                         getUserInfo();

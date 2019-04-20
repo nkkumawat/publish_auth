@@ -11,6 +11,6 @@
 .sign-card{
     background-image: url('../images/back.jpg');
 }
-a {
+a, i {
     cursor: pointer;
 }
