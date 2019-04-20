@@ -9,7 +9,6 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		mobile: {
 			type: DataTypes.STRING,
-			unique: true,
 			allowNull: true
 		},
 		name: {

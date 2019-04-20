@@ -326,10 +326,11 @@ $(document).ready(function () {
                           <div class="card">
                             <div class="card-image">
                               <img height="200" src="`+publication_info.thumbnail.substr(7)+`">
-                              <span class="card-title">` +publication_info.publication_title+`</span>
+                              
                             </div>
                             <div class="card-content">
-                              <p>Created By : `+contract.user.name+`</p>
+                            <span class="card-title">` +publication_info.publication_title+`</span>
+                              <p>By : `+contract.user.name+`</p>
                             </div>
                             <div class="card-action">
                             <a id="contract-`+contract.id+`dwn" style="cursor: pointer;">

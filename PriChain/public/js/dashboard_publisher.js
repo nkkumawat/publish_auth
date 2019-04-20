@@ -143,10 +143,7 @@ $(document).ready(function () {
                 M.toast({html: "<i class='material-icons medium'>apps</i>" + "Some Error"})
             }
         }) 
-        }
-      
-        
-        
+        }        
         function updateContractsTab() {
             $('.progress').removeClass('hide');
             $('.load-data-tab').html('');
@@ -160,11 +157,12 @@ $(document).ready(function () {
                         <div class="col s4 m4">
                           <div class="card">
                             <div class="card-image">
-                              <img height="200" src="../images/wall2.jpg">
-                              <span class="card-title">` +publication_info.publication_title+`</span>
+                            <img height="200" src="`+publication_info.thumbnail.substr(7)+`">
+                             
                             </div>
                             <div class="card-content">
-                              <p>Created By : `+contract.user.name+`</p>
+                            <span class="card-title">` +publication_info.publication_title+`</span>
+                              <p>By : `+contract.user.name+`</p>
                             </div>
                             <div class="card-action ">
                               <a id="contract-`+contract.id+`dwn" style="cursor: pointer;">

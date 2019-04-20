@@ -49,5 +49,46 @@ module.exports = {
                 reject('Server side error');
             });
         });
-    }
+    },
+    getAllPublished: function() {
+        return new Promise((resolve, reject) => {
+            models.contract.findAll({
+                where : { 
+                    published : "yes"
+                },
+                include: [{
+                    model: models.user,
+                    attributes: ['id', 'name'] 
+                }]
+            }).then(contracts => {
+                resolve(contracts);
+            }).catch((err) => {
+                console.error('Error occured while creating user:', err);
+                reject('Server side error');
+            });
+        });
+    },
+    updateStatus: function(params) {
+        return new Promise((resolve, reject) => {
+
+            models.contract.findOne({
+                where: {
+                    id: params.id
+                }
+            }).then(contract => {
+                if (contract) {
+                    contract.updateAttributes({"published" : "yes"})
+                        .then(contrat => {
+                            resolve(contrat.dataValues);
+                        }).catch(err => {
+                            reject('Server side error');
+                        });
+                } else {
+                    reject('No such User exist');
+                }
+            }).catch(err => {
+                reject('Server side error');
+            });    
+        });
+    },
 };

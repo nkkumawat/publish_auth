@@ -170,6 +170,19 @@ router.post('/getall' , function(req, res, next) {
         })
     })
 });
+router.post('/getallpublished' , function(req, res, next) {
+    contractService.getAllPublished().then(contracts => {
+        res.json({
+            success: true,
+            result :  contracts
+        })
+    }).catch(err => {
+        res.json({
+            success: false,
+            result :  err
+        })
+    })
+});
 
 router.post('/getall/byme' , function(req, res, next) {
     var params = req.body;
@@ -294,11 +307,20 @@ router.post('/request/approve' , function(req, res, next) {
                         var par = {
                             id: params.request_id
                         };
-                        requestService.updateStatus(par).then(req => {
-                            res.json({
-                                success: true,
-                                result : req
-                            })                         
+                        requestService.updateStatus(par).then(requ => {
+
+                            par.id = params.contract_id;
+                            contractService.updateStatus(par).then(contract => {
+                                res.json({
+                                    success: true,
+                                    result : requ
+                                }) 
+                            }).catch(err => {
+                                res.json({
+                                    success: false,
+                                    result : err
+                                }) 
+                            })                  
                         }).catch(err => {
                             res.json({
                                 success: false,

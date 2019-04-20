@@ -34,6 +34,10 @@ module.exports = function(sequelize, DataTypes) {
 		contract_info: {
 			type: DataTypes.TEXT,
 			allowNull: true
+		},
+		published :{
+			type: DataTypes.STRING,
+			defaultValue: "no"
 		}
 	}, {
 		timestamp: true,
