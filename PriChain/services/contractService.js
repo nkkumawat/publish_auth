@@ -24,6 +24,7 @@ module.exports = {
                 },
                 include: [{
                       model: models.user,
+                      as : 'authorInfo',
                       attributes: ['id', 'name' , 'email' , 'blockchain_address']
                     }]
             }).then(contracts => {
@@ -40,6 +41,7 @@ module.exports = {
             models.contract.findAll({
                 include: [{
                         model: models.user,
+                        as : 'authorInfo',
                         attributes: ['id', 'name'] 
                     }]
             }).then(contracts => {
@@ -58,7 +60,12 @@ module.exports = {
                 },
                 include: [{
                     model: models.user,
-                    attributes: ['id', 'name'] 
+                    as : 'authorInfo',
+                    attributes: ['id', 'name']                    
+                }, {                    
+                    model: models.user,
+                    as : 'publisherInfo',
+                    attributes: ['id', 'name']                                        
                 }]
             }).then(contracts => {
                 resolve(contracts);
@@ -77,7 +84,10 @@ module.exports = {
                 }
             }).then(contract => {
                 if (contract) {
-                    contract.updateAttributes({"published" : "yes"})
+                    contract.updateAttributes({
+                        "published" : "yes",
+                        "publisher_id": params.publisher_id
+                        })
                         .then(contrat => {
                             resolve(contrat.dataValues);
                         }).catch(err => {

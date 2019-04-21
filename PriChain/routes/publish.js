@@ -27,7 +27,6 @@ router.post('/create' , function(req,  res, next) {
         var params = req.body;
         utilityService.decodeToken(params.user_token).then(userdecoded =>{
             userService.getUser(userdecoded).then(user =>{
-                console.log(user.blockchain_address)
                 web3js.eth.getGasPrice().then((averageGasPrice) => {
                     console.log("Average gas price: " + averageGasPrice);
                     gasPrice = averageGasPrice;
@@ -58,6 +57,7 @@ router.post('/create' , function(req,  res, next) {
                                         contract_address: result,
                                         contract_type: "publish",
                                         user_id: user.id,
+                                        publisher_id: user.id,
                                         contract_info: JSON.stringify(contract_info)
                                     }
                                     contractService.saveContract(params_con).then(contract => {
@@ -65,14 +65,12 @@ router.post('/create' , function(req,  res, next) {
                                             const bytes = bs58.decode(params.publication_hash.split(",")[0]);
                                             const multiHashId = 2;
                                             var ipfsHashBytes =  bytes.slice(multiHashId, bytes.length);
-                                            // console.log(bookAuthor[0].dataValues,"============================");
                                             var bookAthcontract = contractHelper.getContractInstance(bookAuthorContract.abi , bookAuthor[0].dataValues.contract_address);
                                             bookAthcontract.methods.insertBook(ipfsHashBytes, params_con.user_contract_address )
                                             .estimateGas({from: /*user.blockchain_address*/ config.defaultUserAddress}).then(estimatedGas=>{  
                                                 // console.log(result)
                                                 bookAthcontract.methods.insertBook(ipfsHashBytes, params_con.user_contract_address)
                                                 .send({from: /*user.blockchain_address*/ config.defaultUserAddress, gas: estimatedGas+1 }).then(transactionReceipt => {
-                                                    // console.log("-----------------", transactionReceipt);
                                                     res.json({
                                                         success: true,
                                                         result : params
@@ -229,10 +227,10 @@ router.post('/request' , function(req, res, next) {
                 var aContract = contractHelper.getContractInstance(authorContract.abi , params.author_contract_address);
                 aContract.methods.requestApproval(user.blockchain_address , params.ipfs_hash, params.requested_contract_address)
                 .estimateGas({from: /*user.blockchain_address*/ config.defaultUserAddressSUP}).then(estimatedGas=>{  
-                    // console.log(result)
+                    console.log(estimatedGas)
                     aContract.methods.requestApproval(user.blockchain_address , params.ipfs_hash, params.requested_contract_address)
                     .send({from: /*user.blockchain_address*/ config.defaultUserAddressSUP, gas: estimatedGas+1 }).then(transactionReceipt => {
-                        // console.log(result);
+                        console.log(transactionReceipt);
                          aContract.methods.getRequestIndex().call( {from: /*user.blockchain_address*/ config.defaultUserAddress}).then(index_of_request => {
                             params.publisher_id = user.id;
                             params.publisher_address = user.blockchain_address;
@@ -296,11 +294,10 @@ router.post('/request/approve' , function(req, res, next) {
     }else {
         utilityService.decodeToken(params.user_token).then(userdecoded =>{
             userService.getUser(userdecoded).then(user =>{
-                // console.log(params.author_contract_address, "addddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
+                console.log(params.author_contract_address)
                 var aContract = contractHelper.getContractInstance(authorContract.abi , params.author_contract_address);
                 aContract.methods.approveRequest(params.request_blockchain_id-1)
                 .estimateGas({from: config.defaultUserAddress}).then(estimatedGas=>{  
-                    // console.log("0x83A5F28A6bC017233efb2B95141aceBBb36563f4","addddddzddddddddddddddddddddddddddddddd")
                     aContract.methods.approveRequest(params.request_blockchain_id-1)
                     .send({from: config.defaultUserAddress, gas: estimatedGas+1 }).then(result => {
                         console.log(result);
@@ -308,8 +305,8 @@ router.post('/request/approve' , function(req, res, next) {
                             id: params.request_id
                         };
                         requestService.updateStatus(par).then(requ => {
-
                             par.id = params.contract_id;
+                            par.publisher_id = params.publisher_id;
                             contractService.updateStatus(par).then(contract => {
                                 res.json({
                                     success: true,
@@ -358,59 +355,59 @@ router.post('/request/approve' , function(req, res, next) {
     }
 });
 
-router.post('/request/get1' , function(req, res, next) {
-    var params = req.body;
-    if(req.cookies.role != 'Author'){
-        res.json({
-            success : false,
-            result: "you are not a author"
-        })
-    }else {
-        utilityService.decodeToken(params.user_token).then(userdecoded =>{
-            userService.getUser(userdecoded).then(user =>{
-                console.log(params.author_contract_address, "addddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
-                var aContract = contractHelper.getContractInstance(authorContract.abi , params.author_contract_address);
-                aContract.methods.getAuthor()
-                .estimateGas({from: config.defaultUserAddress}).then(estimatedGas=>{  
-                    // console.log(result,"addddddzddddddddddddddddddddddddddddddd")
-                    aContract.methods.getAuthor()
-                    .call({from: config.defaultUserAddress, gas: estimatedGas+1 }).then(result => {
-                        console.log(result);
-                        res.json({
-                            success: true,
-                            result : result
-                        })                         
+// router.post('/request/get1' , function(req, res, next) {
+//     var params = req.body;
+//     if(req.cookies.role != 'Author'){
+//         res.json({
+//             success : false,
+//             result: "you are not a author"
+//         })
+//     }else {
+//         utilityService.decodeToken(params.user_token).then(userdecoded =>{
+//             userService.getUser(userdecoded).then(user =>{
+//                 console.log(params.author_contract_address, "addddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
+//                 var aContract = contractHelper.getContractInstance(authorContract.abi , params.author_contract_address);
+//                 aContract.methods.getAuthor()
+//                 .estimateGas({from: config.defaultUserAddress}).then(estimatedGas=>{  
+//                     // console.log(result,"addddddzddddddddddddddddddddddddddddddd")
+//                     aContract.methods.getAuthor()
+//                     .call({from: config.defaultUserAddress, gas: estimatedGas+1 }).then(result => {
+//                         console.log(result);
+//                         res.json({
+//                             success: true,
+//                             result : result
+//                         })                         
                      
-                    }).catch(err => {
-                        console.log(err);
-                        res.json({
-                            success: false,
-                            result :  err
-                        })
-                    })                                                                                          
-                }).catch(err => {
-                    console.log(err)
-                    res.json({
-                        success: false,
-                        result :  err
-                    })
-                })
-            }).catch(err => {
-                console.log(err)
-                res.json({
-                    success: false,
-                    result :  err
-                })
-            })
-        }).catch(err => {
-            console.log(err)
-            res.json({
-                success: false,
-                result :  err
-            })
-        })
-    }
-});
+//                     }).catch(err => {
+//                         console.log(err);
+//                         res.json({
+//                             success: false,
+//                             result :  err
+//                         })
+//                     })                                                                                          
+//                 }).catch(err => {
+//                     console.log(err)
+//                     res.json({
+//                         success: false,
+//                         result :  err
+//                     })
+//                 })
+//             }).catch(err => {
+//                 console.log(err)
+//                 res.json({
+//                     success: false,
+//                     result :  err
+//                 })
+//             })
+//         }).catch(err => {
+//             console.log(err)
+//             res.json({
+//                 success: false,
+//                 result :  err
+//             })
+//         })
+//     }
+// });
 
 router.post('/request/count', function(req, res, next) {
     var params = req.body;
@@ -530,12 +527,12 @@ router.post('/request/delete', function(req, res, next) {
 
 router.post('/blockchain/get', function(req, res, next) {
     var params = req.body;
-    // console.log(params.contract_address); 
+    console.log(params.contract_address); 
     utilityService.decodeToken(params.user_token).then(userdecoded =>{
         userService.getUser(userdecoded).then(user =>{
             const bContract = contractHelper.getContractInstance(bookContract.abi, params.contract_address);
             bContract.methods.getBookInfo().call( {from: user.blockchain_address} , (err , result)=>{
-                // console.log(result );
+                console.log(result );
                 if(err) {
                     res.json({
                         success: false,
@@ -548,7 +545,7 @@ router.post('/blockchain/get', function(req, res, next) {
                         if(err){
                             res.json({
                                 success: false,
-                                result :  "result"
+                                result :  err
                             })
                         } else {
                             var file = files[0];
@@ -593,9 +590,9 @@ router.post('/checkauth', function(req, res, next) {
         console.log(bytes);
         var ipfsHashBytes =  bytes.slice(multiHashId, bytes.length);
         console.log(ipfsHashBytes);
-        bookAuthContract.methods.checkAuthenticity(ipfsHashBytes).call( {from: config.defaultUserAddress } , (err , result)=>{
-            console.log(err, "nk");
+        bookAuthContract.methods.checkAuthenticity(ipfsHashBytes).call( {from: config.defaultUserAddress } , (err , result)=>{            
             if(!err) {
+                console.log(err);
                 if(parseInt(result)){
                     params = {}
                     params.blockchain_contract_address = result;
@@ -621,7 +618,6 @@ router.post('/checkauth', function(req, res, next) {
                     }); 
                 }
             } else {
-                
                 res.json({
                     success: false,
                     result : err

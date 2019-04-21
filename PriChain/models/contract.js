@@ -38,12 +38,17 @@ module.exports = function(sequelize, DataTypes) {
 		published :{
 			type: DataTypes.STRING,
 			defaultValue: "no"
+		},
+		publisher_id : {
+			type: DataTypes.INTEGER,
+			allowNull: false
 		}
 	}, {
 		timestamp: true,
 	});
 	Contract.associate = function(models) {
-		Contract.belongsTo(models.user, {foreignKey: 'user_id', targetKey: 'id'})
+		Contract.belongsTo(models.user, {foreignKey: 'user_id', targetKey: 'id', as: 'authorInfo'});
+		Contract.belongsTo(models.user, {foreignKey: 'publisher_id', targetKey: 'id', as: 'publisherInfo'});
 	} 
 	return Contract;
 };

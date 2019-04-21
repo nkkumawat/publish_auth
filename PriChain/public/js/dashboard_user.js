@@ -133,6 +133,7 @@ $(document).ready(function () {
                 user_token: window.localStorage.getItem("auth_token")}, function (response) {
                 if(response.success) {
                     response.result.forEach(contract => {
+                        console.log(contract);
                         var publication_info = JSON.parse(contract.contract_info);
                         console.log(publication_info.publication_title , "nk")
                         $('.load-data-tab').append(`  
@@ -143,7 +144,8 @@ $(document).ready(function () {
                             </div>
                             <div class="card-content">
                               <span class="card-title">` +publication_info.publication_title+`</span>
-                              <p> By : `+contract.user.name+`</p>
+                              <p> Author : `+contract.authorInfo.name+`</p>
+                              <p> Published By : `+contract.publisherInfo.name+`</p>
                             </div>
                             <div class="card-action ">
                               <a id="contract-`+contract.id+`dwn" style="cursor: pointer;">

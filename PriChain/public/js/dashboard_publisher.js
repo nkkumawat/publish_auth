@@ -49,22 +49,20 @@ $(document).ready(function () {
                           </td>
                           <td> <a href="#" id="distributer-`+request.id+`-approved">${request.user.name} </a></td>
                           <td>${request.createdAt}</td>
-                          
                       </tr>
                     `);
                       $('#contract-'+request.id+"-approved").click(function() {
                           getPublicationInfo(request.contract.contract_address);
                       })
                       $('#distributer-'+request.id+"-approved").click(function() {
-                          console.log(request.user)
+                          console.log(request.authorInfo)
                           // getAuthor(request.user.email);
                       })
-                })
-              }else {
-                  $('.load-data-tab').html("No Requests");
-              }
-
-              }else {
+					})
+				} else {
+					$('.load-data-tab').html("No Requests");
+				}
+              } else {
                   $('.load-data-tab').html(response.result);
               }
             });
@@ -110,8 +108,7 @@ $(document).ready(function () {
                     $('#contract-'+request.id).click(function() {
                         console.log('#contract-'+request.contract.id);
                         getPublicationInfo(request.contract.contract_address);
-                    })
-                                        
+                    })                     
                     $('#request-delete-'+request.id).click(function() {
                         // getPublicationInfo(request.contract.contract_address);
                         deleteRequest(request);
@@ -126,23 +123,21 @@ $(document).ready(function () {
             }
           });
         }
-        
-
         function deleteRequest(request) {
-          $('.progress').removeClass('hide');
-          $.post('/publish/request/delete', {
-            user_token: window.localStorage.getItem("auth_token"),
-            request_id : request.id}, function (response) {
-            $('.progress').addClass('hide');
-            if(response.success){
-                
-                getRequestsForMe();
-                getRequestsCount();
-                M.toast({html: "<i class='material-icons medium'>apps</i>Request Deleted"})
-            }else {
-                M.toast({html: "<i class='material-icons medium'>apps</i>" + "Some Error"})
-            }
-          }) 
+			$('.progress').removeClass('hide');
+			$.post('/publish/request/delete', {
+				user_token: window.localStorage.getItem("auth_token"),
+				request_id : request.id}, function (response) {
+				$('.progress').addClass('hide');
+				if(response.success){
+					
+					getRequestsForMe();
+					getRequestsCount();
+					M.toast({html: "<i class='material-icons medium'>apps</i>Request Deleted"})
+				}else {
+					M.toast({html: "<i class='material-icons medium'>apps</i>" + "Some Error"})
+				}
+			}) 
         }        
         function updateContractsTab() {
             $('.progress').removeClass('hide');
@@ -162,7 +157,7 @@ $(document).ready(function () {
                             </div>
                             <div class="card-content">
                             <span class="card-title">` +publication_info.publication_title+`</span>
-                              <p>By : `+contract.user.name+`</p>
+                              <p>By : `+contract.authorInfo.name+`</p>
                             </div>
                             <div class="card-action ">
                               <a id="contract-`+contract.id+`dwn" style="cursor: pointer;">
@@ -224,22 +219,21 @@ $(document).ready(function () {
           });
         }
         function getUserInfo() {
-          $.post('/dashboard/get/user/profile', {
-              user_token: window.localStorage.getItem("auth_token")}, function (response) {
-              console.log(response)
-              if(response.success) {
-                  $('.loader').addClass('hide');
-                  $('.email').html(response.result.email);
-                  $('.name').html(response.result.name);
-                  $('.avatar').attr( "src" , response.result.picture_url.substring(7));
-                  console.log(response.result.email)
-              }else {
-                  window.location.href = "/logout"
-              }
-              usr =  response;
-          });
-      }
-
+			$.post('/dashboard/get/user/profile', {
+				user_token: window.localStorage.getItem("auth_token")}, function (response) {
+				console.log(response)
+				if(response.success) {
+					$('.loader').addClass('hide');
+					$('.email').html(response.result.email);
+					$('.name').html(response.result.name);
+					$('.avatar').attr( "src" , response.result.picture_url.substring(7));
+					console.log(response.result.email)
+				}else {
+					window.location.href = "/logout"
+				}
+				usr =  response;
+			});
+        }
         function getPublicationInfo(contract_address) {
             // console.log(contract_address);
             $('.progress').removeClass('hide');
@@ -258,76 +252,71 @@ $(document).ready(function () {
                 $('.progress').addClass('hide');
             })
         }   
-
         $('#profile-tab').click(function() {
           // var usr = getUserInfo(); 
-          $('.load-data-tab').html(`<div class="col s12 m12">
-              <div class="card ">
-              <div class="row profile-card">
-                  <div class="col s4 m4">
-                  <img id="avatar-profile-tab" class=" circle" width="200" height="200" src="`+usr.result.picture_url.substring(7)+`">
-                  <i class="Tiny material-icons" id="edit-picture">edit</i>
-                  <form method="post" id="profile-picture-upload-form"  action="/uploader/upload/picture" enctype="multipart/form-data">
-                      <input type="file" id="profile-pic-input"  name="profile-picture"  hidden />
-                  </form>
-                  </div>
-                  <div class="col  profile-name-card ">
-                  <div id="name"><b>Name: </b>`+usr.result.name+`</div>
-                  <div id="email"><b>Email: </b>`+usr.result.email+`</div>
-                  <div id="mobile"><b>Mobile: </b>`+usr.result.mobile+`</div>
-                  <div id="blockchain-address"><b>BlockChain Address: </b>`+usr.result.blockchain_address+`</div> 
-                  </div>
-              </div>
-              </div>
-          </div>`);
+			$('.load-data-tab').html(`<div class="col s12 m12">
+				<div class="card ">
+				<div class="row profile-card">
+					<div class="col s4 m4">
+					<img id="avatar-profile-tab" class=" circle" width="200" height="200" src="`+usr.result.picture_url.substring(7)+`">
+					<i class="Tiny material-icons" id="edit-picture">edit</i>
+					<form method="post" id="profile-picture-upload-form"  action="/uploader/upload/picture" enctype="multipart/form-data">
+						<input type="file" id="profile-pic-input"  name="profile-picture"  hidden />
+					</form>
+					</div>
+					<div class="col  profile-name-card ">
+					<div id="name"><b>Name: </b>`+usr.result.name+`</div>
+					<div id="email"><b>Email: </b>`+usr.result.email+`</div>
+					<div id="mobile"><b>Mobile: </b>`+usr.result.mobile+`</div>
+					<div id="blockchain-address"><b>BlockChain Address: </b>`+usr.result.blockchain_address+`</div> 
+					</div>
+				</div>
+				</div>
+			</div>`);
 
-          $("#edit-picture").click(function() {
-              $("#profile-pic-input").trigger('click'); 
-          })
-          $('#profile-pic-input').change(function() {
-              $('#profile-picture-upload-form').submit();
-          });
-
-          $('#profile-picture-upload-form').submit(function(e){
-              e.preventDefault();
-              $('.progress').removeClass('hide');
-              $(this).ajaxSubmit({
-                  data: {},
-                  contentType: 'application/json',
-                  success: function(result){  
-                      if(result.success) {
-                          
-                          console.log(result);
-                          updateProfilePicPath(result.filepath);
-                          // $('.file-path').val(result.filepath);
-                  
-                      }else {
-                          $('.progress').addClass('hide');
-                          // $('.file-path').val("Error Upload Again");
-                      }
-                  },
-                  error: function (err) {
-                      $('.progress').addClass('hide');
-                      $('.file-path').val("Error Upload Again");
-                  }
-              });
-          });
-
-          function updateProfilePicPath(newPath) {
-              $.post('/update', {
-                  user_token: window.localStorage.getItem("auth_token"),
-                  picture_url : newPath}, function (response) {
-                  $('.progress').addClass('hide');
-                  if(response.success){
-                      console.log(response.user.picture_url);
-                      getUserInfo();
-                      $('#avatar-profile-tab').attr("src" , response.user.picture_url.substring(7));
-                      M.toast({html: "<i class='material-icons medium'>apps</i>Profile Picture Updated"})
-                  }else {
-                      M.toast({html: "<i class='material-icons medium'>apps</i>" + "Some Error"})
-                  }
-              })
-          }
-      }) 
+			$("#edit-picture").click(function() {
+				$("#profile-pic-input").trigger('click'); 
+			})
+			$('#profile-pic-input').change(function() {
+				$('#profile-picture-upload-form').submit();
+			});
+			$('#profile-picture-upload-form').submit(function(e){
+				e.preventDefault();
+				$('.progress').removeClass('hide');
+				$(this).ajaxSubmit({
+					data: {},
+					contentType: 'application/json',
+					success: function(result){  
+						if(result.success) {                        
+							console.log(result);
+							updateProfilePicPath(result.filepath);
+							// $('.file-path').val(result.filepath);                  
+						} else {
+							$('.progress').addClass('hide');
+							// $('.file-path').val("Error Upload Again");
+						}
+					},
+					error: function (err) {
+						$('.progress').addClass('hide');
+						$('.file-path').val("Error Upload Again");
+					}
+				});
+			});
+			function updateProfilePicPath(newPath) {
+				$.post('/update', {
+					user_token: window.localStorage.getItem("auth_token"),
+					picture_url : newPath}, function (response) {
+					$('.progress').addClass('hide');
+					if(response.success){
+						console.log(response.user.picture_url);
+						getUserInfo();
+						$('#avatar-profile-tab').attr("src" , response.user.picture_url.substring(7));
+						M.toast({html: "<i class='material-icons medium'>apps</i>Profile Picture Updated"})
+					}else {
+						M.toast({html: "<i class='material-icons medium'>apps</i>" + "Some Error"})
+					}
+				})
+			}
+      	}) 
     }
 });

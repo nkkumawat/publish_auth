@@ -1,5 +1,4 @@
 $(document).ready(function () {
-
 	if(!window.localStorage.getItem("auth_token")){
 	  window.location.href = '/signin';
 	}else {
@@ -154,7 +153,8 @@ $(document).ready(function () {
                 author_id: request.contract.user_id,
                 contract_id: request.contract.id,
                 request_blockchain_id: request.request_blockchain_id,
-                request_id: request.id }, function (response) {
+                request_id: request.id,
+                publisher_id: request.publisher_id }, function (response) {
                 // console.log(response);
                 if(response.success) {
                   M.toast({html: "<i class='material-icons medium'>apps</i>" +" Request Apporved!!"})
@@ -332,6 +332,7 @@ $(document).ready(function () {
                 user_token: window.localStorage.getItem("auth_token")}, function (response) {
                 if(response.success) {
                     response.result.forEach(contract => {
+                        console.log(contract)
                         var publication_info = JSON.parse(contract.contract_info);
                         $('.load-data-tab').append(`  
                         <div class="col s4 m4">
@@ -341,7 +342,7 @@ $(document).ready(function () {
                             </div>
                             <div class="card-content">
                             <span class="card-title">` +publication_info.publication_title+`</span>
-                              <p>By : `+contract.user.name+`</p>
+                              <p>By : `+contract.authorInfo.name+`</p>
                             </div>
                             <div class="card-action">
                             <a id="contract-`+contract.id+`dwn" style="cursor: pointer;">
@@ -452,7 +453,6 @@ $(document).ready(function () {
                     }
                 });
             });
-
             function updateProfilePicPath(newPath) {
                 $.post('/update', {
                     user_token: window.localStorage.getItem("auth_token"),
