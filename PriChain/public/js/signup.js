@@ -1,13 +1,10 @@
 $(document).ready(function () {
 	if(window.localStorage.getItem("auth_token")){
 		window.location.href = '/dashboard';
-				
 	}else {
-	  $('select').formSelect();
-	  M.updateTextFields();
-	  console.log("Not Loggedin")
-	  $('#submit-signup').click(function () {
-			console.log("clicked");
+		$('select').formSelect();
+		M.updateTextFields();
+		$('#submit-signup').click(function () {
 			const user_type = $('#user-type').val();
 			const user_email = $('#user-email').val();
 			const user_password = $('#user-password').val();
@@ -19,15 +16,13 @@ $(document).ready(function () {
 				password: user_password, 
 				mobile: user_mobile,
 				name: user_name}, function (response) {
-					if(response.success){
-						user_token = response.user_token;
-						// console.log(response)
-						// console.log(user_token)
-						window.localStorage.setItem("auth_token", user_token);
-						window.location.href = '/dashboard';
-					}else {
-						$('.msg').html(response.message)
-					}
+				if(response.success){
+					user_token = response.user_token;
+					window.localStorage.setItem("auth_token", user_token);
+					window.location.href = '/dashboard';
+				}else {
+					$('.msg').html(response.message)
+				}
 			})
 		})
 		$('#submit-signin').click(function() {

@@ -355,60 +355,6 @@ router.post('/request/approve' , function(req, res, next) {
     }
 });
 
-// router.post('/request/get1' , function(req, res, next) {
-//     var params = req.body;
-//     if(req.cookies.role != 'Author'){
-//         res.json({
-//             success : false,
-//             result: "you are not a author"
-//         })
-//     }else {
-//         utilityService.decodeToken(params.user_token).then(userdecoded =>{
-//             userService.getUser(userdecoded).then(user =>{
-//                 console.log(params.author_contract_address, "addddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
-//                 var aContract = contractHelper.getContractInstance(authorContract.abi , params.author_contract_address);
-//                 aContract.methods.getAuthor()
-//                 .estimateGas({from: config.defaultUserAddress}).then(estimatedGas=>{  
-//                     // console.log(result,"addddddzddddddddddddddddddddddddddddddd")
-//                     aContract.methods.getAuthor()
-//                     .call({from: config.defaultUserAddress, gas: estimatedGas+1 }).then(result => {
-//                         console.log(result);
-//                         res.json({
-//                             success: true,
-//                             result : result
-//                         })                         
-                     
-//                     }).catch(err => {
-//                         console.log(err);
-//                         res.json({
-//                             success: false,
-//                             result :  err
-//                         })
-//                     })                                                                                          
-//                 }).catch(err => {
-//                     console.log(err)
-//                     res.json({
-//                         success: false,
-//                         result :  err
-//                     })
-//                 })
-//             }).catch(err => {
-//                 console.log(err)
-//                 res.json({
-//                     success: false,
-//                     result :  err
-//                 })
-//             })
-//         }).catch(err => {
-//             console.log(err)
-//             res.json({
-//                 success: false,
-//                 result :  err
-//             })
-//         })
-//     }
-// });
-
 router.post('/request/count', function(req, res, next) {
     var params = req.body;
     utilityService.decodeToken(params.user_token).then(userdecoded =>{

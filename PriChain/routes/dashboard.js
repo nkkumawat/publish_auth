@@ -22,20 +22,18 @@ router.use('/save', function(req, res, next) {
 });
 router.get('/', function(req, res, next) {
     var iam = req.cookies.role
-    console.log( req.cookies.role)
     if(iam == "Author"){
         res.render('dashboard_author', {});
-    }else if(iam == "Publisher") {
+    } else if (iam == "Publisher") {
         res.render('dashboard_publisher', {});
-    }else if(iam == "User") {
+    } else if (iam == "User") {
         res.render('dashboard_user', {});
-    }else {
+    } else {
         res.redirect('logout');
     }
 });
 
 router.post('/get/user/profile', function(req, res, next) {
-    console.log("profile");
     const params = req.body;
     utilityService.decodeToken(params.user_token).then(userdecoded =>{
         userService.getUser(userdecoded)
@@ -59,9 +57,7 @@ router.post('/get/user/profile', function(req, res, next) {
 });
 
 router.post('/get/distributer/profile', function(req, res, next) {
-    console.log("profile");
     const params = req.body;
-    console.log(params);
     utilityService.decodeToken(params.user_token).then(userdecoded =>{
         userService.getUser(params)
         .then(user => {
@@ -86,23 +82,19 @@ router.post('/get/distributer/profile', function(req, res, next) {
 
 router.post('/update/user', function(req, res, next) {
     const params = req.body;
-
-    // can't update email and password
     params.email = req.decoded.email;
     delete params.password;
-    
-    userService.updateUser(params)
-        .then(user => {
-            res.json({
-                success: true,
-                result: user
-            });
-        }).catch(err => {
-            res.json({
-                success: false,
-                message: err
-            });
+    userService.updateUser(params).then(user => {
+        res.json({
+            success: true,
+            result: user
         });
+    }).catch(err => {
+        res.json({
+            success: false,
+            message: err
+        });
+    });
 });
 
 module.exports = router;

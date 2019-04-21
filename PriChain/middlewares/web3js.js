@@ -1,7 +1,9 @@
 const Web3 = require('web3');
+const env = process.env.NODE_ENV || 'development';
+const config = require('../config/config.json')[env];
 
 const options = {
-    defaultAccount: '0x0',
+    defaultAccount: config.defaultUserAddress,
     defaultBlock: 'latest',
     defaultGas: 100000,
     defaultGasPrice: 0,

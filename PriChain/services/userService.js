@@ -7,7 +7,6 @@ const models = require('../models');
 const bcrypt = require('bcrypt');
 
 module.exports = {
-
     signup: function(params) {
         return new Promise((resolve, reject) => {
             if (!params.email || !params.password) {

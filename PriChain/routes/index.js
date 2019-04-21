@@ -1,10 +1,7 @@
 const express = require('express');
 const router = express.Router();
-
 const utilityService = require('../services/utilityService');
 const userService = require('../services/userService');
-const validationService = require('../services/validationService');
-
 const env = process.env.NODE_ENV || 'development';
 const config = require('../config/config.json')[env];
 const web3js = require('../middlewares/web3js');
@@ -13,7 +10,6 @@ const publisherConract = require('../contracts/Publisher.json');
 const userConract = require('../contracts/User.json');
 const contractHelper = require('../middlewares/contractHelper');
 
-/* GET home page. */
 router.get('/', (req, res, next) => {
     res.render('signin' , {});
 });
@@ -28,23 +24,21 @@ router.get('/signup', (req, res, next) => {
 
 router.post('/signin', (req, res, next) => {
 	const params = req.body;
-	userService.loginUser(params)
-		.then(user => {
-			console.log(user)
-			const token = utilityService.getToken(user);
-			res.cookie('role', user.role, { 
-				maxAge: 2 * 60 * 60 * 1000, httpOnly: true 
-			}); 
-			res.json({
-				success: true,
-				user_token : token
-			});
-		}).catch(err => {
-			res.json({
-				success: false,
-				message: err
-			});
+	userService.loginUser(params).then(user => {
+		const token = utilityService.getToken(user);
+		res.cookie('role', user.role, { 
+			maxAge: 2 * 60 * 60 * 1000, httpOnly: true 
+		}); 
+		res.json({
+			success: true,
+			user_token : token
 		});
+	}).catch(err => {
+		res.json({
+			success: false,
+			message: err
+		});
+	});
 });
 
 router.post('/signup', function(req, res, next) {

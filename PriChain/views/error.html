@@ -4,18 +4,18 @@
     <head>
         <% include ./partials/head %>
     </head>
-<body>
-    <div class=" row">
-        <div class="col-4"></div>
-        <div class="col-4">
-        <h1 class="center"><%= message %></h1>
-        <h2 class="center"><%= error.status %></h2>
-        <pre    ><%= error.stack %></pre> 
-        <pre    ><%= error.desc %></pre> 
+    <body>
+        <div class=" row">
+            <div class="col-4"></div>
+            <div class="col-4">
+            <h1 class="center"><%= message %></h1>
+            <h2 class="center"><%= error.status %></h2>
+            <pre    ><%= error.stack %></pre> 
+            <pre    ><%= error.desc %></pre> 
+            </div>
+            <div class="col-4"></div> 
         </div>
-        <div class="col-4"></div> 
-    </div>
-</body>
+    </body>
 </html>
 
 

@@ -4,14 +4,12 @@ $(document).ready(function () {
 	}else {
         $('.sidenav').sidenav();
         M.updateTextFields();
-
         updateContractsTab();		
         getUserInfo();
         var usr = "";
         $('#all-contract-link').click(function() {
             updateContractsTab();
         });
-
         $('#check-auth-link').click(function() {
             $('.load-data-tab').html(`  
             <div class="row">
@@ -69,10 +67,9 @@ $(document).ready(function () {
                     contentType: 'application/json',
                     success: function(result){  
                         if(result.success) {
-                        $('.progress').addClass('hide');
-                        $('.loader').addClass('hide');
-                        $('.file-path').val(result.filepath);
-                    
+                            $('.progress').addClass('hide');
+                            $('.loader').addClass('hide');
+                            $('.file-path').val(result.filepath);
                         }else {
                             $('.progress').addClass('hide');
                             $('.loader').addClass('hide');
@@ -137,64 +134,63 @@ $(document).ready(function () {
                         var publication_info = JSON.parse(contract.contract_info);
                         console.log(publication_info.publication_title , "nk")
                         $('.load-data-tab').append(`  
-                        <div class="col s4 m4">
-                          <div class="card">
-                            <div class="card-image">
-                            <img height="200" src="`+publication_info.thumbnail.substr(7)+`">
+                            <div class="col s4 m4">
+                                <div class="card">
+                                    <div class="card-image">
+                                    <img height="200" src="`+publication_info.thumbnail.substr(7)+`">
+                                    </div>
+                                    <div class="card-content">
+                                    <span class="card-title">` +publication_info.publication_title+`</span>
+                                    <p> Author : `+contract.authorInfo.name+`</p>
+                                    <p> Published By : `+contract.publisherInfo.name+`</p>
+                                    </div>
+                                    <div class="card-action ">
+                                    <a id="contract-`+contract.id+`dwn" style="cursor: pointer;">
+                                        <i class="material-icons">file_download</i>
+                                    </a>
+                                    <a id="contract-`+contract.id+`" style="cursor: pointer;">
+                                        <i class="material-icons">open_in_new</i>
+                                    </a>
+                                    
+                                    </div>
+                                </div>
                             </div>
-                            <div class="card-content">
-                              <span class="card-title">` +publication_info.publication_title+`</span>
-                              <p> Author : `+contract.authorInfo.name+`</p>
-                              <p> Published By : `+contract.publisherInfo.name+`</p>
-                            </div>
-                            <div class="card-action ">
-                              <a id="contract-`+contract.id+`dwn" style="cursor: pointer;">
-                                <i class="material-icons">file_download</i>
-                              </a>
-                              <a id="contract-`+contract.id+`" style="cursor: pointer;">
-                                <i class="material-icons">open_in_new</i>
-                              </a>
-                              
-                            </div>
-                          </div>
-                        </div>
-                      `);
-                      $('#contract-'+contract.id).click(function() {
-                          getPublicationInfo(contract.contract_address);
-                      })
-                      $('#contract-'+contract.id+"dwn").click(function() {
-                        $('.progress').removeClass('hide');
-                        $('.loader').removeClass('hide');
-                        $.post('/publish/blockchain/get', {
+                        `);
+                        $('#contract-'+contract.id).click(function() {
+                            getPublicationInfo(contract.contract_address);
+                        })
+                        $('#contract-'+contract.id+"dwn").click(function() {
+                            $('.progress').removeClass('hide');
+                            $('.loader').removeClass('hide');
+                            $.post('/publish/blockchain/get', {
+                                user_token: window.localStorage.getItem("auth_token"),
+                                contract_address: contract.contract_address}, function (response) {
+                                if(response.success) {
+                                    window.open( response.result['2'].substring(7), "_blank");
+                                    console.log(response.result['2'].substring(7), "narendra");
+                                } else {
+                                    $('.load-data-tab').append('Error');
+                                }
+                                $('.progress').addClass('hide');
+                                $('.loader').addClass('hide');
+                            });
+                        })
+                        $('#contract-'+contract.id+'req').click(function() {
+                            $.post('/publish/request', {
                             user_token: window.localStorage.getItem("auth_token"),
-                            contract_address: contract.contract_address}, function (response) {
-                            if(response.success) {
-                                window.open( response.result['2'].substring(7), "_blank");
-                                console.log(response.result['2'].substring(7), "narendra");
-                            } else {
-                                $('.load-data-tab').append('Error');
-                            }
-                            $('.progress').addClass('hide');
-                            $('.loader').addClass('hide');
-                        });
-                      })
-                      $('#contract-'+contract.id+'req').click(function() {
-                        $.post('/publish/request', {
-                          user_token: window.localStorage.getItem("auth_token"),
-                          author_address: contract.user_address,
-                          author_contract_address: contract.user_contract_address,
-                          requested_contract_address: contract.contract_address,
-                          ipfs_hash: publication_info.publication_hash,
-                          author_id: contract.user_id,
-                          contract_id: contract.id }, function (response) {
-                          // console.log(response);
-                          if(response.success) {
-                            M.toast({html: "<i class='material-icons medium'>apps</i>" +" Publication Requested!!"})
-                            getRequestsCount();
-                          }else {
-                            M.toast({html: "<i class='material-icons medium'>apps</i>" + response.result})
-                          }
-                          });
+                            author_address: contract.user_address,
+                            author_contract_address: contract.user_contract_address,
+                            requested_contract_address: contract.contract_address,
+                            ipfs_hash: publication_info.publication_hash,
+                            author_id: contract.user_id,
+                            contract_id: contract.id }, function (response) {
+                                if(response.success) {
+                                    M.toast({html: "<i class='material-icons medium'>apps</i>" +" Publication Requested!!"})
+                                    getRequestsCount();
+                                }else {
+                                    M.toast({html: "<i class='material-icons medium'>apps</i>" + response.result})
+                                }
+                            });
                         });
                     });
                     if(!response.result.length){
@@ -207,19 +203,15 @@ $(document).ready(function () {
                 $('.loader').addClass('hide');
             })	
         } 
-        
-     
+
         function getUserInfo() {
             $.post('/dashboard/get/user/profile', {
                 user_token: window.localStorage.getItem("auth_token")}, function (response) {
-                console.log(response)
                 if(response.success) {
                     $('.loader').addClass('hide');
                     $('.email').html(response.result.email);
                     $('.name').html(response.result.name);
-                    // console.log(response.result.picture_url.substring(6))
                     $('.avatar').attr( "src" , response.result.picture_url.substring(7));
-                    console.log(response.result.email)
                 }else {
                     window.location.href = "/logout"
                 }
@@ -228,7 +220,6 @@ $(document).ready(function () {
         }
 
         function getPublicationInfo(contract_address) {
-            // console.log(contract_address);
             $('.progress').removeClass('hide');
             $('.loader').removeClass('hide');
             $.post('/publish/blockchain/get', {
@@ -237,9 +228,7 @@ $(document).ready(function () {
                 if(response.success) {
                     $('.load-data-tab').html(`<h4 class="center">`+response.result['3']+`<h4>`);
                     $('.load-data-tab').append(`<iframe src="`+response.result['2'].substring(7)+`"
-                            style="width:900px; height:500px;" frameborder="0">
-                        </iframe>`);
-                    
+                        style="width:900px; height:500px;" frameborder="0"> </iframe>`);
                 }else {
                     $('.load-data-tab').append('Error');
                 }
@@ -248,7 +237,6 @@ $(document).ready(function () {
             })
         }
         $('#profile-tab').click(function() {
-            // var usr = getUserInfo(); 
             $('.load-data-tab').html(`<div class="col s12 m12">
                 <div class="card ">
                 <div class="row profile-card">
@@ -268,14 +256,12 @@ $(document).ready(function () {
                 </div>
                 </div>
             </div>`);
-
             $("#edit-picture").click(function() {
                 $("#profile-pic-input").trigger('click'); 
             })
             $('#profile-pic-input').change(function() {
                 $('#profile-picture-upload-form').submit();
             });
-
             $('#profile-picture-upload-form').submit(function(e){
                 e.preventDefault();
                 $('.progress').removeClass('hide');
@@ -285,15 +271,11 @@ $(document).ready(function () {
                     contentType: 'application/json',
                     success: function(result){  
                         if(result.success) {
-                            
                             console.log(result);
                             updateProfilePicPath(result.filepath);
-                            // $('.file-path').val(result.filepath);
-                    
                         }else {
                             $('.progress').addClass('hide');
                             $('.loader').addClass('hide');
-                            // $('.file-path').val("Error Upload Again");
                         }
                     },
                     error: function (err) {

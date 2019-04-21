@@ -3,57 +3,55 @@
     <head>
         <% include ./partials/head %>
     </head>
-<body>
-  <ul id="slide-out" class=" sidenav sidenav-fixed">
-    <li><div class="user-view">
-      <div class="background">
-        <img src="images/wall.jpg">
-      </div>
-      <a href="#user"><img class=" avatar circle" src="images/avatar_m.jpeg"></a>
-      <a href="#name"><span class="white-text name">John Doe</span></a>
-      <a href="#email"><span class="white-text email">demoemail@gmail.com</span></a>
-    </div></li>
-    <li><a id="all-contract-link"> <i class="material-icons">chrome_reader_mode</i>All Publications</a></li>
-    <!-- <li><a  id="create-contract-link"><i class="material-icons">add_circle_outline</i>Upload Book For Publishing</a></li> -->
-    <li><div class="divider"></div></li>
-    <li><a class="" id="requests-by-me"><i class="material-icons">exit_to_app</i>My Requests &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   <span class="request-numbers circle gray"></span></a></li>
-    <li><a id="requests-by-me-approved" class=""><i class="material-icons">exit_to_app</i>Approved Requests</a></li>
-    <li><div class="divider"></div></li>
-    <li><a class="" id="profile-tab"><i class="material-icons">account_circle</i>Profile</a></li>
-    <li><a class="" href="/logout"><i class="material-icons">close</i>Logout</a></li>
-  </ul>
-  <div class="container1">
-     <!-- ===============Loader==================== -->
-    <div class="row">
-      <div class="col s12 m12">
-        <div class="preloader-wrapper big active loader">
-          <div class="spinner-layer spinner-blue-only">
-            <div class="circle-clipper left">
-              <div class="circle"></div>
-            </div><div class="gap-patch">
-              <div class="circle"></div>
-            </div><div class="circle-clipper right">
-              <div class="circle"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="progress hide" style="z-index: 2; position: fixed;">
-          <div class="indeterminate"></div>
-      </div>
-    </div>
-      <!-- =====================MainPage================ -->
-
-    <div class="row">
-      <div class="col s3 m3"></div>
-      <div class="col s9 m9">
-          <div class="row load-data-tab "></div>
-      </div>
-    </div>
-
-
-  </div>
- 
-  <script src="../js/dashboard_publisher.js"></script>
+	<body>
+		<ul id="slide-out" class=" sidenav sidenav-fixed">
+			<li>
+				<div class="user-view">
+				<div class="background">
+					<img src="images/wall.jpg">
+				</div>
+				<a href="#user"><img class=" avatar circle" src="images/avatar_m.jpeg"></a>
+				<a href="#name"><span class="white-text name">John Doe</span></a>
+				<a href="#email"><span class="white-text email">demoemail@gmail.com</span></a>
+				</div>
+			</li>
+			<li><a id="all-contract-link"> <i class="material-icons">chrome_reader_mode</i>All Publications</a></li>
+			<!-- <li><a  id="create-contract-link"><i class="material-icons">add_circle_outline</i>Upload Book For Publishing</a></li> -->
+			<li><div class="divider"></div></li>
+			<li><a class="" id="requests-by-me"><i class="material-icons">exit_to_app</i>My Requests &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   <span class="request-numbers circle gray"></span></a></li>
+			<li><a id="requests-by-me-approved" class=""><i class="material-icons">exit_to_app</i>Approved Requests</a></li>
+			<li><div class="divider"></div></li>
+			<li><a class="" id="profile-tab"><i class="material-icons">account_circle</i>Profile</a></li>
+			<li><a class="" href="/logout"><i class="material-icons">close</i>Logout</a></li>
+		</ul>
+		<div class="container1">
+			<!-- ===============Loader==================== -->
+			<div class="row">
+			<div class="col s12 m12">
+				<div class="preloader-wrapper big active loader">
+				<div class="spinner-layer spinner-blue-only">
+					<div class="circle-clipper left">
+					<div class="circle"></div>
+					</div><div class="gap-patch">
+					<div class="circle"></div>
+					</div><div class="circle-clipper right">
+					<div class="circle"></div>
+					</div>
+				</div>
+				</div>
+			</div>
+			<div class="progress hide" style="z-index: 2; position: fixed;">
+				<div class="indeterminate"></div>
+			</div>
+			</div>
+			<!-- =====================MainPage================ -->
+			<div class="row">
+			<div class="col s3 m3"></div>
+			<div class="col s9 m9">
+				<div class="row load-data-tab "></div>
+			</div>
+			</div>
+		</div>
+	<script src="../js/dashboard_publisher.js"></script>
     </body>
 </html>

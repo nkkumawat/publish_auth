@@ -1,6 +1,4 @@
 'use strict';
-
-
 module.exports = function(sequelize, DataTypes) {
 	var Contract = sequelize.define('contract', {
 		id: { 

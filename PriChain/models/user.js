@@ -1,5 +1,4 @@
 'use strict';
-
 module.exports = function(sequelize, DataTypes) {
 	var User = sequelize.define('user', {
 		id: { 
@@ -56,6 +55,5 @@ module.exports = function(sequelize, DataTypes) {
 
 	User.associate = function(models) {
 	}  
-	// User.sync({force: true});
 	return User;
 };

@@ -2,19 +2,17 @@
 <html lang="en">
     <head>
         <% include ./partials/head %>
+        <script>
+            $(document).ready(function () {
+                if(window.localStorage.getItem("auth_token")){
+                    window.localStorage.clear();
+                    window.location.href = '/'
+                }else {
+                    window.location.href = '/'
+                }
+            });
+        </script>
     </head>
-<body>
-
-    <script>
-        $(document).ready(function () {
-            if(window.localStorage.getItem("auth_token")){
-                window.localStorage.clear();
-                window.location.href = '/'
-            }else {
-                window.location.href = '/'
-            }
-        })
-    </script>
-
+    <body>
     </body>
 </html>

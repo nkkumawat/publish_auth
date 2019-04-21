@@ -1,8 +1,9 @@
-
 const bookAuthorContract = require('../contracts/BookAuthor.json');
 const contractHelper = require('../middlewares/contractHelper');
 const booAuthorService = require('../services/bookAuthorService');
 const web3js = require('../middlewares/web3js');
+const env = process.env.NODE_ENV || 'development';
+const config = require('../config/config.json')[env];
 
 module.exports =  { 
     createContract : function() {
@@ -21,7 +22,7 @@ module.exports =  {
                     data:  bookAuthorContract.bytecode,
                     arguments: []
                 }).send({
-                    from : "0x83A5F28A6bC017233efb2B95141aceBBb36563f4",
+                    from : config.defaultUserAddress,
                     gasPrice: gasPrice, 
                     gas: gas
                 }).then((instance) => { 
@@ -42,4 +43,4 @@ module.exports =  {
             console.log(err);
         })
     }
-}
+};
