@@ -16,6 +16,9 @@ $(document).ready(function () {
         });
         $("#requests-by-me").click(function() {
           	getRequestsForMe();
+		})
+		$("#requests-for-me-rejected").click(function() {
+            getRequestsForMeRejected();
         })
         function getRequestsForMeApproved() {    
 			$.post('/publish/request/get/approved', {
@@ -145,7 +148,6 @@ $(document).ready(function () {
 							<div class="card">
 								<div class="card-image">
 								<img height="200" src="`+publication_info.thumbnail.substr(7)+`">
-								
 								</div>
 								<div class="card-content">
 								<span class="card-title">` +publication_info.publication_title+`</span>
@@ -219,6 +221,57 @@ $(document).ready(function () {
 				}
 				usr =  response;
 			});
+		}
+		function getRequestsForMeRejected() {
+            console.log("Narendra")
+            $.post('/publish/request/get/rejected', {
+                user_token: window.localStorage.getItem("auth_token")}, function (response) {
+                if(response.success) {
+                    console.log(response)
+                    if(response.result.length){
+                        $('.load-data-tab').html(`
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>For</th>
+                                        <th>Distributer Name</th>
+                                        <th>Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="request-table"></tbody>
+                            </table>
+                        `);
+                        response.result.forEach(request => {
+                            var publication_info = JSON.parse(request.contract.contract_info);
+                            console.log(publication_info)
+                            $('#request-table').append(`
+                                <tr>
+                                    <td><img width="30" height="30" src="images/wall3.jpg"/> </td>
+                                    <td>${publication_info.publication_title}
+                                    <a id="contract-`+request.id+`-approved" style="cursor: pointer;">
+                                        <i class="material-icons">open_in_new</i>
+                                    </a>
+                                    </td>
+                                    <td> <a href="#" id="distributer-`+request.id+`-approved">${request.user.name} </a></td>
+                                    <td>${request.createdAt}</td> 
+                                </tr>
+                            `);
+                            $('#contract-'+request.id+"-approved").click(function() {
+                                getPublicationInfo(request.contract.contract_address);
+                            })
+                            $('#distributer-'+request.id+"-approved").click(function() {
+                                console.log(request.user)
+                                getDistributer(request.user.email);
+                            })
+                        })
+                    }else {
+                        $('.load-data-tab').html("No Requests");
+                    }
+                }else {
+                    $('.load-data-tab').html(response.result);
+                }
+            });
         }
         function getPublicationInfo(contract_address) {
             $('.progress').removeClass('hide');

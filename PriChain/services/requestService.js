@@ -62,7 +62,6 @@ module.exports = {
             });    
         });
     },
-
     getAllForMeNotApproved: function(user_id , role) {
         if(role == 'Author'){
             condition = {
@@ -94,7 +93,38 @@ module.exports = {
             
         });
     },
-
+    getAllForMeRejected: function(user_id , role) {
+        if(role == 'Author'){
+            condition = {
+                author_id: user_id,
+                approved: "rejected"
+            }
+        }else {
+            condition = {
+                publisher_id: user_id,
+                approved: "rejected"
+            }
+        }
+        return new Promise((resolve, reject) => {
+            models.request.findAll({
+                where : condition,
+                include: [{
+                        model: models.user,
+                        attributes: ['id', 'name', 'email']
+                    
+                    }, {
+                        model: models.contract
+                    }]
+            }).then(requests => {
+                console.log(requests , "Found")
+                resolve(requests);
+            }).catch((err) => {
+                console.error('Error occured while creating user:', err);
+                reject('Server side error');
+            });
+            
+        });
+    },
     getAllForMeApproved: function(user_id , role) {
         if(role == 'Author'){
             condition = {
@@ -139,5 +169,28 @@ module.exports = {
             });
             
         });
-    }
+    },
+    rejectRequest: function(params) {
+        return new Promise((resolve, reject) => {
+            models.request.findOne({
+                where: {
+                    id: params.request_id
+                }
+            }).then(request => {
+                if (request) {
+                    request.updateAttributes({"approved" : "rejected"})
+                        .then(request => {
+                            // console.log(request , "Found")
+                            resolve(request.dataValues);
+                        }).catch(err => {
+                            reject('Server side error');
+                        });
+                } else {
+                    reject('No such User exist');
+                }
+            }).catch(err => {
+                reject('Server side error');
+            });    
+        });
+    },
 };

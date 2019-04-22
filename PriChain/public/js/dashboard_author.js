@@ -133,6 +133,58 @@ $(document).ready(function () {
                 }
             });
         }
+
+        function getRequestsForMeRejected() {
+            console.log("Narendra")
+            $.post('/publish/request/get/rejected', {
+                user_token: window.localStorage.getItem("auth_token")}, function (response) {
+                if(response.success) {
+                    console.log(response)
+                    if(response.result.length){
+                        $('.load-data-tab').html(`
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>For</th>
+                                        <th>Distributer Name</th>
+                                        <th>Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="request-table"></tbody>
+                            </table>
+                        `);
+                        response.result.forEach(request => {
+                            var publication_info = JSON.parse(request.contract.contract_info);
+                            console.log(publication_info)
+                            $('#request-table').append(`
+                                <tr>
+                                    <td><img width="30" height="30" src="images/wall3.jpg"/> </td>
+                                    <td>${publication_info.publication_title}
+                                    <a id="contract-`+request.id+`-approved" style="cursor: pointer;">
+                                        <i class="material-icons">open_in_new</i>
+                                    </a>
+                                    </td>
+                                    <td> <a href="#" id="distributer-`+request.id+`-approved">${request.user.name} </a></td>
+                                    <td>${request.createdAt}</td> 
+                                </tr>
+                            `);
+                            $('#contract-'+request.id+"-approved").click(function() {
+                                getPublicationInfo(request.contract.contract_address);
+                            })
+                            $('#distributer-'+request.id+"-approved").click(function() {
+                                console.log(request.user)
+                                getDistributer(request.user.email);
+                            })
+                        })
+                    }else {
+                        $('.load-data-tab').html("No Requests");
+                    }
+                }else {
+                    $('.load-data-tab').html(response.result);
+                }
+            });
+        }
         function requestApprove(request) {
             console.log("approve");
             $.post('/publish/request/approve', {
@@ -159,6 +211,9 @@ $(document).ready(function () {
         })
         $("#requests-for-me-approved").click(function() {
             getRequestsForMeApproved();
+        })
+        $("#requests-for-me-rejected").click(function() {
+            getRequestsForMeRejected();
         })
         $('#all-contract-link').click(function() {
             updateContractsTab();
@@ -290,7 +345,7 @@ $(document).ready(function () {
 
         function deleteRequest(request) {
             $('.progress').removeClass('hide');
-            $.post('/publish/request/delete', {
+            $.post('/publish/request/reject', {
                 user_token: window.localStorage.getItem("auth_token"),
                 request_id : request.id}, function (response) {
                 $('.progress').addClass('hide');

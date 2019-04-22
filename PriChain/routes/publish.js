@@ -441,6 +441,67 @@ router.post('/request/get/approved', function(req, res, next) {
         })
     })
 });
+router.post('/request/get/rejected', function(req, res, next) {
+    var params = req.body;
+    utilityService.decodeToken(params.user_token).then(userdecoded =>{
+        userService.getUser(userdecoded).then(user =>{
+            requestService.getAllForMeRejected(user.id,req.cookies.role).then(requests => {
+                res.json({
+                    success: true,
+                    result : requests
+                })
+            }).catch(err => {
+                res.json({
+                    success: false,
+                    result :  err
+                })
+            })
+        }).catch(err => {
+            res.json({
+                success: false,
+                result :  err
+            })
+        })
+    }).catch(err => {
+        res.json({
+            success: false,
+            result :  err
+        })
+    })
+});
+
+router.post('/request/reject', function(req, res, next) {
+    // console.log("nk---------")
+    var params = req.body;
+    utilityService.decodeToken(params.user_token).then(userdecoded =>{
+        userService.getUser(userdecoded).then(user =>{
+            requestService.rejectRequest(params).then(requests => {
+                res.json({
+                    success: true,
+                    result : requests
+                })
+            }).catch(err => {
+                console.log(err);
+                res.json({
+                    success: false,
+                    result :  err
+                })
+            })
+        }).catch(err => {
+            console.log(err)
+            res.json({
+                success: false,
+                result :  err
+            })
+        })
+    }).catch(err => {
+        console.log(err);
+        res.json({
+            success: false,
+            result :  err
+        })
+    })
+});
 
 router.post('/request/delete', function(req, res, next) {
     var params = req.body;
